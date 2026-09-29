@@ -34,6 +34,10 @@ OpenFga.Language.SourceRange.StartColumn.get -> int
 OpenFga.Language.SourceRange.StartLine.get -> int
 OpenFga.Language.SyntaxError
 OpenFga.Language.SyntaxError.Symbol.get -> string?
+OpenFga.Language.TransformOptions
+OpenFga.Language.TransformOptions.IncludeSourceInformation.get -> bool
+OpenFga.Language.TransformOptions.IncludeSourceInformation.set -> void
+OpenFga.Language.TransformOptions.TransformOptions() -> void
 OpenFga.Language.ValidationErrorType
 OpenFga.Language.ValidationErrorType.AllowedTypesNotValidOnSchema1_0 = 15 -> OpenFga.Language.ValidationErrorType
 OpenFga.Language.ValidationErrorType.AssignableRelationsMustHaveType = 14 -> OpenFga.Language.ValidationErrorType
@@ -64,5 +68,9 @@ override OpenFga.Language.SourceRange.GetHashCode() -> int
 override OpenFga.Language.SourceRange.ToString() -> string!
 static OpenFga.Language.ModelTransformer.TransformDslToJson(string! dsl) -> string!
 static OpenFga.Language.ModelTransformer.TransformDslToModel(string! dsl) -> OpenFga.Sdk.Model.AuthorizationModel!
+static OpenFga.Language.ModelTransformer.TransformJsonToDsl(string! json) -> string!
+static OpenFga.Language.ModelTransformer.TransformJsonToDsl(string! json, OpenFga.Language.TransformOptions! options) -> string!
+static OpenFga.Language.ModelTransformer.TransformModelToDsl(OpenFga.Sdk.Model.AuthorizationModel! model) -> string!
+static OpenFga.Language.ModelTransformer.TransformModelToDsl(OpenFga.Sdk.Model.AuthorizationModel! model, OpenFga.Language.TransformOptions! options) -> string!
 static OpenFga.Language.SourceRange.operator !=(OpenFga.Language.SourceRange left, OpenFga.Language.SourceRange right) -> bool
 static OpenFga.Language.SourceRange.operator ==(OpenFga.Language.SourceRange left, OpenFga.Language.SourceRange right) -> bool

@@ -35,4 +35,62 @@ public static class ModelTransformer
     /// <exception cref="ArgumentNullException"><paramref name="dsl"/> is null.</exception>
     /// <exception cref="DslSyntaxException">The DSL does not parse.</exception>
     public static string TransformDslToJson(string dsl) => ModelJson.Serialize(TransformDslToModel(dsl));
+
+    /// <summary>Writes a model as DSL.</summary>
+    /// <param name="model">The model; it is not modified.</param>
+    /// <returns>The DSL text.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="model"/> is null.</exception>
+    /// <exception cref="DslTransformationException">The model cannot be expressed in the DSL.</exception>
+    public static string TransformModelToDsl(AuthorizationModel model) => TransformModelToDsl(model, new TransformOptions());
+
+    /// <summary>Writes a model as DSL.</summary>
+    /// <param name="model">The model; it is not modified.</param>
+    /// <param name="options">Output options.</param>
+    /// <returns>The DSL text.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="model"/> or <paramref name="options"/> is null.</exception>
+    /// <exception cref="DslTransformationException">The model cannot be expressed in the DSL.</exception>
+    public static string TransformModelToDsl(AuthorizationModel model, TransformOptions options)
+    {
+        if (model is null)
+        {
+            throw new ArgumentNullException(nameof(model));
+        }
+
+        if (options is null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
+        return DslWriter.Write(ModelJson.Clone(model), options.IncludeSourceInformation);
+    }
+
+    /// <summary>Writes a JSON authorization model as DSL.</summary>
+    /// <param name="json">The model in the JSON syntax accepted by the OpenFGA API.</param>
+    /// <returns>The DSL text.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="json"/> is null.</exception>
+    /// <exception cref="ArgumentException"><paramref name="json"/> is not a JSON authorization model.</exception>
+    /// <exception cref="DslTransformationException">The model cannot be expressed in the DSL.</exception>
+    public static string TransformJsonToDsl(string json) => TransformJsonToDsl(json, new TransformOptions());
+
+    /// <summary>Writes a JSON authorization model as DSL.</summary>
+    /// <param name="json">The model in the JSON syntax accepted by the OpenFGA API.</param>
+    /// <param name="options">Output options.</param>
+    /// <returns>The DSL text.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="json"/> or <paramref name="options"/> is null.</exception>
+    /// <exception cref="ArgumentException"><paramref name="json"/> is not a JSON authorization model.</exception>
+    /// <exception cref="DslTransformationException">The model cannot be expressed in the DSL.</exception>
+    public static string TransformJsonToDsl(string json, TransformOptions options)
+    {
+        if (json is null)
+        {
+            throw new ArgumentNullException(nameof(json));
+        }
+
+        if (options is null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
+        return DslWriter.Write(ModelJson.Deserialize(json, nameof(json)), options.IncludeSourceInformation);
+    }
 }
