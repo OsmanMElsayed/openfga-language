@@ -17,6 +17,9 @@ OpenFga.Language.ModelValidationError.Symbol.get -> string?
 OpenFga.Language.ModelValidationError.TypeName.get -> string?
 OpenFga.Language.ModelValidationException
 OpenFga.Language.ModelValidationException.Errors.get -> System.Collections.Generic.IReadOnlyList<OpenFga.Language.ModelValidationError!>!
+OpenFga.Language.ModFile
+OpenFga.Language.ModFile.Contents.get -> System.Collections.Generic.IReadOnlyList<string!>!
+OpenFga.Language.ModFile.Schema.get -> string!
 OpenFga.Language.ModFileValidationException
 OpenFga.Language.ModFileValidationException.Errors.get -> System.Collections.Generic.IReadOnlyList<OpenFga.Language.LanguageError!>!
 OpenFga.Language.ModuleTransformationError
@@ -80,6 +83,7 @@ static OpenFga.Language.ModelTransformer.TransformJsonToDsl(string! json) -> str
 static OpenFga.Language.ModelTransformer.TransformJsonToDsl(string! json, OpenFga.Language.TransformOptions! options) -> string!
 static OpenFga.Language.ModelTransformer.TransformModelToDsl(OpenFga.Sdk.Model.AuthorizationModel! model) -> string!
 static OpenFga.Language.ModelTransformer.TransformModelToDsl(OpenFga.Sdk.Model.AuthorizationModel! model, OpenFga.Language.TransformOptions! options) -> string!
+static OpenFga.Language.ModFile.Parse(string! text) -> OpenFga.Language.ModFile!
 static OpenFga.Language.SourceRange.operator !=(OpenFga.Language.SourceRange left, OpenFga.Language.SourceRange right) -> bool
 static OpenFga.Language.SourceRange.operator ==(OpenFga.Language.SourceRange left, OpenFga.Language.SourceRange right) -> bool
 static OpenFga.Language.Validation.ModelValidator.Validate(OpenFga.Sdk.Model.AuthorizationModel! model) -> void
