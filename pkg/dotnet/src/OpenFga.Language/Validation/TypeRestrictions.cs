@@ -48,7 +48,7 @@ internal static class TypeRestrictions
 
     public static string ToText(RelationReference restriction)
     {
-        var text = restriction.Type;
+        var text = restriction.Type ?? string.Empty;
         if (restriction.Wildcard != null)
         {
             text += ":*";
@@ -66,7 +66,7 @@ internal static class TypeRestrictions
         return text;
     }
 
-    public static List<string> ToTexts(IEnumerable<RelationReference>? restrictions) => restrictions.OrEmpty().Select(ToText).ToList();
+    public static List<string> ToTexts(IEnumerable<RelationReference>? restrictions) => restrictions.OrEmpty().Where(r => r != null).Select(ToText).ToList();
 
     public static DecodedRestriction Decode(string restriction)
     {

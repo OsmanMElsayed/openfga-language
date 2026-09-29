@@ -88,6 +88,24 @@ public class ModelToDslTests
         Assert.Equal(before, model.ToJson());
     }
 
+    [Theory]
+    // A null entry in type_definitions.
+    [InlineData("""{"schema_version":"1.1","type_definitions":[{"type":"user"},null,{"type":"doc","relations":{"viewer":{"this":{}}},"metadata":{"relations":{"viewer":{"directly_related_user_types":[{"type":"user"}]}}}}]}""")]
+    // A null child inside a union.
+    [InlineData("""{"schema_version":"1.1","type_definitions":[{"type":"user"},{"type":"doc","relations":{"viewer":{"union":{"child":[{"this":{}},null]}}},"metadata":{"relations":{"viewer":{"directly_related_user_types":[{"type":"user"}]}}}}]}""")]
+    // A null entry in directly_related_user_types.
+    [InlineData("""{"schema_version":"1.1","type_definitions":[{"type":"user"},{"type":"doc","relations":{"viewer":{"this":{}}},"metadata":{"relations":{"viewer":{"directly_related_user_types":[null,{"type":"user"}]}}}}]}""")]
+    // A null value in conditions.
+    [InlineData("""{"schema_version":"1.1","type_definitions":[{"type":"user"},{"type":"doc","relations":{"viewer":{"this":{}}},"metadata":{"relations":{"viewer":{"directly_related_user_types":[{"type":"user"}]}}}}],"conditions":{"c":null}}""")]
+    public void MalformedJsonModelReportsOnlyDocumentedExceptions(string json)
+    {
+        var exception = Record.Exception(() => ModelTransformer.TransformJsonToDsl(json));
+
+        Assert.True(
+            exception is null or ArgumentException or DslTransformationException,
+            $"Unexpected exception: {exception}");
+    }
+
     [Fact]
     public void InvalidJsonThrowsArgumentException()
     {

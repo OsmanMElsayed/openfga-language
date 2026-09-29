@@ -53,6 +53,11 @@ internal static class ModelValidationEngine
     {
         foreach (var typeDef in model.TypeDefinitions.OrEmpty())
         {
+            if (typeDef is null)
+            {
+                continue;
+            }
+
             var typeName = typeDef.Type ?? string.Empty;
             var typeOrigin = new Origin(typeDef.Metadata?.SourceInfo?.File, typeDef.Metadata?.Module);
             TrackModule(fileToModules, typeOrigin);
@@ -96,7 +101,7 @@ internal static class ModelValidationEngine
             return;
         }
 
-        var typeDefinitions = model.TypeDefinitions.OrEmpty().ToList();
+        var typeDefinitions = model.TypeDefinitions.OrEmpty().Where(t => t != null).ToList();
         var typeMap = new Dictionary<string, TypeDefinition>();
         var usedConditionNames = new HashSet<string>();
         foreach (var typeDef in typeDefinitions)
@@ -106,7 +111,7 @@ internal static class ModelValidationEngine
             {
                 foreach (var restriction in (relationMetadata?.DirectlyRelatedUserTypes).OrEmpty())
                 {
-                    if (restriction.Condition is { Length: > 0 })
+                    if (restriction?.Condition is { Length: > 0 })
                     {
                         usedConditionNames.Add(restriction.Condition);
                     }
@@ -209,6 +214,11 @@ internal static class ModelValidationEngine
         while (pending.Count > 0)
         {
             var child = pending.Dequeue();
+            if (child is null)
+            {
+                continue;
+            }
+
             if (child.Union?.Child is { Count: > 0 } unionChildren)
             {
                 unionChildren.ForEach(pending.Enqueue);
@@ -358,6 +368,11 @@ internal static class ModelValidationEngine
         var seen = new HashSet<string>();
         foreach (var restriction in (relationMetadata?.DirectlyRelatedUserTypes).OrEmpty())
         {
+            if (restriction is null)
+            {
+                continue;
+            }
+
             var text = TypeRestrictions.ToText(restriction);
             if (!seen.Add(text))
             {
@@ -387,6 +402,11 @@ internal static class ModelValidationEngine
             var seen = new HashSet<string>();
             foreach (var userset in children.OrEmpty())
             {
+                if (userset is null)
+                {
+                    continue;
+                }
+
                 // Direct assignments have no name, and JS skips empty names.
                 var name = RelationTarget.Of(userset).DefinitionName(userset);
                 if (name is not { Length: > 0 })

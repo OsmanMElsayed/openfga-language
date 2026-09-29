@@ -118,6 +118,11 @@ internal static class EntryPointAnalyzer
             var hasLoop = false;
             foreach (var child in rewrite.Union.Child.OrEmpty())
             {
+                if (child is null)
+                {
+                    continue;
+                }
+
                 var result = Analyze(typeMap, typeName, relationName, child, visited.Clone());
                 if (result.HasEntry)
                 {
@@ -134,6 +139,11 @@ internal static class EntryPointAnalyzer
         {
             foreach (var child in rewrite.Intersection.Child.OrEmpty())
             {
+                if (child is null)
+                {
+                    continue;
+                }
+
                 var result = Analyze(typeMap, typeName, relationName, child, visited.Clone());
                 if (!result.HasEntry)
                 {

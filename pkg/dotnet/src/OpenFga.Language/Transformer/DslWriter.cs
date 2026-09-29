@@ -17,7 +17,7 @@ internal static class DslWriter
     public static string Write(AuthorizationModel model, bool includeSourceInformation)
     {
         var schemaVersion = string.IsNullOrEmpty(model.SchemaVersion) ? "1.1" : model.SchemaVersion;
-        var typeDefinitions = model.TypeDefinitions;
+        var typeDefinitions = model.TypeDefinitions?.Where(t => t != null).ToList();
         var isModularModel = typeDefinitions?.Any(t => !string.IsNullOrEmpty(t.Metadata?.Module)) == true;
 
         var builder = new StringBuilder();
@@ -68,7 +68,7 @@ internal static class DslWriter
     private static string WriteRelation(string typeName, string relationName, Userset? relationDefinition, RelationMetadata? relationMetadata, bool includeSourceInformation)
     {
         var definition = relationDefinition ?? new Userset();
-        var typeRestrictions = relationMetadata?.DirectlyRelatedUserTypes ?? [];
+        var typeRestrictions = (relationMetadata?.DirectlyRelatedUserTypes ?? []).Where(r => r != null).ToList();
         var counter = new DirectAssignmentCounter();
 
         var builder = new StringBuilder("    define ").Append(relationName).Append(": ");
@@ -178,6 +178,13 @@ internal static class DslWriter
             return [];
         }
 
+        // Null entries are treated as absent.
+        usersets.RemoveAll(u => u is null);
+        if (usersets.Count == 0)
+        {
+            return [];
+        }
+
         var thisPosition = usersets.FindIndex(u => u.This != null);
         if (thisPosition > 0)
         {
@@ -221,7 +228,7 @@ internal static class DslWriter
             return string.Empty;
         }
 
-        IEnumerable<KeyValuePair<string, Condition>> ordered = conditions.OrderBy(c => c, Comparer<KeyValuePair<string, Condition>>.Create((a, b) =>
+        IEnumerable<KeyValuePair<string, Condition>> ordered = conditions.Where(c => c.Value != null).OrderBy(c => c, Comparer<KeyValuePair<string, Condition>>.Create((a, b) =>
             isModularModel
                 ? SortByModule(a.Key, b.Key, a.Value.Metadata?.Module, a.Value.Metadata?.SourceInfo?.File, b.Value.Metadata?.Module, b.Value.Metadata?.SourceInfo?.File)
                 : string.CompareOrdinal(a.Key, b.Key)));
