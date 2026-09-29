@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using OpenFga.Language.Parsing;
 using OpenFga.Language.Transformer;
 using OpenFga.Sdk.Model;
@@ -92,5 +94,33 @@ public static class ModelTransformer
         }
 
         return DslWriter.Write(ModelJson.Deserialize(json, nameof(json)), options.IncludeSourceInformation);
+    }
+
+    /// <summary>Combines the files of a modular model into one validated model.</summary>
+    /// <param name="files">The module files, typically those listed by <see cref="ModFile.Contents"/>.</param>
+    /// <param name="schemaVersion">The schema version of the combined model, typically <see cref="ModFile.Schema"/>.</param>
+    /// <returns>The combined model, with <c>source_info</c> metadata naming each definition's file.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="files"/> or <paramref name="schemaVersion"/> is null.</exception>
+    /// <exception cref="ArgumentException"><paramref name="files"/> contains null.</exception>
+    /// <exception cref="ModuleTransformationException">A file does not parse, definitions conflict, or the combined model is invalid.</exception>
+    public static AuthorizationModel TransformModulesToModel(IEnumerable<ModuleFile> files, string schemaVersion)
+    {
+        if (files is null)
+        {
+            throw new ArgumentNullException(nameof(files));
+        }
+
+        if (schemaVersion is null)
+        {
+            throw new ArgumentNullException(nameof(schemaVersion));
+        }
+
+        var fileList = files.ToList();
+        if (fileList.Any(f => f is null))
+        {
+            throw new ArgumentException("The collection contains a null module file.", nameof(files));
+        }
+
+        return ModuleCombiner.Combine(fileList, schemaVersion);
     }
 }
