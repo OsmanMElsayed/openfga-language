@@ -59,4 +59,12 @@ public class ModFileTests
     [Fact]
     public void NullThrowsArgumentNullException()
         => Assert.Equal("text", Assert.Throws<ArgumentNullException>(() => ModFile.Parse(null!)).ParamName);
+
+    [Fact]
+    public void OversizedHexSchemaIsReportedNotThrown()
+    {
+        var exception = Assert.Throws<ModFileValidationException>(() => ModFile.Parse("schema: 0xFFFFFFFFFFFFFFFFF\ncontents:\n  - core.fga\n"));
+
+        Assert.Equal("unexpected schema type, expected string got value 0xFFFFFFFFFFFFFFFFF", Assert.Single(exception.Errors).Message);
+    }
 }

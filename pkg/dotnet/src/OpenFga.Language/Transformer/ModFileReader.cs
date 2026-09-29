@@ -167,12 +167,26 @@ internal static class ModFileReader
     {
         if (value.StartsWith("0x", StringComparison.Ordinal))
         {
-            return Convert.ToInt64(value.Substring(2), 16).ToString(CultureInfo.InvariantCulture);
+            try
+            {
+                return Convert.ToInt64(value.Substring(2), 16).ToString(CultureInfo.InvariantCulture);
+            }
+            catch (OverflowException)
+            {
+                return value;
+            }
         }
 
         if (value.StartsWith("0o", StringComparison.Ordinal))
         {
-            return Convert.ToInt64(value.Substring(2), 8).ToString(CultureInfo.InvariantCulture);
+            try
+            {
+                return Convert.ToInt64(value.Substring(2), 8).ToString(CultureInfo.InvariantCulture);
+            }
+            catch (OverflowException)
+            {
+                return value;
+            }
         }
 
         var lower = value.ToLowerInvariant();
