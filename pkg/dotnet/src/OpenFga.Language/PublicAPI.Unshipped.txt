@@ -38,6 +38,13 @@ OpenFga.Language.TransformOptions
 OpenFga.Language.TransformOptions.IncludeSourceInformation.get -> bool
 OpenFga.Language.TransformOptions.IncludeSourceInformation.set -> void
 OpenFga.Language.TransformOptions.TransformOptions() -> void
+OpenFga.Language.Validation.ModelValidationOptions
+OpenFga.Language.Validation.ModelValidationOptions.ModelValidationOptions() -> void
+OpenFga.Language.Validation.ModelValidationOptions.RelationPattern.get -> string!
+OpenFga.Language.Validation.ModelValidationOptions.RelationPattern.set -> void
+OpenFga.Language.Validation.ModelValidationOptions.TypePattern.get -> string!
+OpenFga.Language.Validation.ModelValidationOptions.TypePattern.set -> void
+OpenFga.Language.Validation.ModelValidator
 OpenFga.Language.Validation.TupleSyntax
 OpenFga.Language.ValidationErrorType
 OpenFga.Language.ValidationErrorType.AllowedTypesNotValidOnSchema1_0 = 15 -> OpenFga.Language.ValidationErrorType
@@ -75,6 +82,10 @@ static OpenFga.Language.ModelTransformer.TransformModelToDsl(OpenFga.Sdk.Model.A
 static OpenFga.Language.ModelTransformer.TransformModelToDsl(OpenFga.Sdk.Model.AuthorizationModel! model, OpenFga.Language.TransformOptions! options) -> string!
 static OpenFga.Language.SourceRange.operator !=(OpenFga.Language.SourceRange left, OpenFga.Language.SourceRange right) -> bool
 static OpenFga.Language.SourceRange.operator ==(OpenFga.Language.SourceRange left, OpenFga.Language.SourceRange right) -> bool
+static OpenFga.Language.Validation.ModelValidator.Validate(OpenFga.Sdk.Model.AuthorizationModel! model) -> void
+static OpenFga.Language.Validation.ModelValidator.Validate(OpenFga.Sdk.Model.AuthorizationModel! model, OpenFga.Language.Validation.ModelValidationOptions! options) -> void
+static OpenFga.Language.Validation.ModelValidator.Validate(string! dsl) -> void
+static OpenFga.Language.Validation.ModelValidator.Validate(string! dsl, OpenFga.Language.Validation.ModelValidationOptions! options) -> void
 static OpenFga.Language.Validation.TupleSyntax.IsValidConditionName(string! value) -> bool
 static OpenFga.Language.Validation.TupleSyntax.IsValidObject(string! value) -> bool
 static OpenFga.Language.Validation.TupleSyntax.IsValidObjectId(string! value) -> bool
