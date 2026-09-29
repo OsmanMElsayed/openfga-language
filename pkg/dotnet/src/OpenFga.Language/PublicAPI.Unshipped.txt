@@ -38,6 +38,7 @@ OpenFga.Language.TransformOptions
 OpenFga.Language.TransformOptions.IncludeSourceInformation.get -> bool
 OpenFga.Language.TransformOptions.IncludeSourceInformation.set -> void
 OpenFga.Language.TransformOptions.TransformOptions() -> void
+OpenFga.Language.Validation.TupleSyntax
 OpenFga.Language.ValidationErrorType
 OpenFga.Language.ValidationErrorType.AllowedTypesNotValidOnSchema1_0 = 15 -> OpenFga.Language.ValidationErrorType
 OpenFga.Language.ValidationErrorType.AssignableRelationsMustHaveType = 14 -> OpenFga.Language.ValidationErrorType
@@ -74,3 +75,12 @@ static OpenFga.Language.ModelTransformer.TransformModelToDsl(OpenFga.Sdk.Model.A
 static OpenFga.Language.ModelTransformer.TransformModelToDsl(OpenFga.Sdk.Model.AuthorizationModel! model, OpenFga.Language.TransformOptions! options) -> string!
 static OpenFga.Language.SourceRange.operator !=(OpenFga.Language.SourceRange left, OpenFga.Language.SourceRange right) -> bool
 static OpenFga.Language.SourceRange.operator ==(OpenFga.Language.SourceRange left, OpenFga.Language.SourceRange right) -> bool
+static OpenFga.Language.Validation.TupleSyntax.IsValidConditionName(string! value) -> bool
+static OpenFga.Language.Validation.TupleSyntax.IsValidObject(string! value) -> bool
+static OpenFga.Language.Validation.TupleSyntax.IsValidObjectId(string! value) -> bool
+static OpenFga.Language.Validation.TupleSyntax.IsValidRelation(string! value) -> bool
+static OpenFga.Language.Validation.TupleSyntax.IsValidType(string! value) -> bool
+static OpenFga.Language.Validation.TupleSyntax.IsValidUser(string! value) -> bool
+static OpenFga.Language.Validation.TupleSyntax.IsValidUserObject(string! value) -> bool
+static OpenFga.Language.Validation.TupleSyntax.IsValidUserset(string! value) -> bool
+static OpenFga.Language.Validation.TupleSyntax.IsValidUserWildcard(string! value) -> bool
