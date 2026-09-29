@@ -45,6 +45,7 @@ OpenFga.Language.TransformOptions
 OpenFga.Language.TransformOptions.IncludeSourceInformation.get -> bool
 OpenFga.Language.TransformOptions.IncludeSourceInformation.set -> void
 OpenFga.Language.TransformOptions.TransformOptions() -> void
+OpenFga.Language.Utilities.ModelUtilities
 OpenFga.Language.Validation.ModelValidationOptions
 OpenFga.Language.Validation.ModelValidationOptions.ModelValidationOptions() -> void
 OpenFga.Language.Validation.ModelValidationOptions.RelationPattern.get -> string!
@@ -91,6 +92,8 @@ static OpenFga.Language.ModelTransformer.TransformModulesToModel(System.Collecti
 static OpenFga.Language.ModFile.Parse(string! text) -> OpenFga.Language.ModFile!
 static OpenFga.Language.SourceRange.operator !=(OpenFga.Language.SourceRange left, OpenFga.Language.SourceRange right) -> bool
 static OpenFga.Language.SourceRange.operator ==(OpenFga.Language.SourceRange left, OpenFga.Language.SourceRange right) -> bool
+static OpenFga.Language.Utilities.ModelUtilities.GetModuleForObjectTypeRelation(OpenFga.Sdk.Model.TypeDefinition! typeDefinition, string! relation) -> string?
+static OpenFga.Language.Utilities.ModelUtilities.IsRelationAssignable(OpenFga.Sdk.Model.Userset! relationDefinition) -> bool
 static OpenFga.Language.Validation.ModelValidator.Validate(OpenFga.Sdk.Model.AuthorizationModel! model) -> void
 static OpenFga.Language.Validation.ModelValidator.Validate(OpenFga.Sdk.Model.AuthorizationModel! model, OpenFga.Language.Validation.ModelValidationOptions! options) -> void
 static OpenFga.Language.Validation.ModelValidator.Validate(string! dsl) -> void
