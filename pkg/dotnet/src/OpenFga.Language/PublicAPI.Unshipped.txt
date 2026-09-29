@@ -1,1 +1,65 @@
 #nullable enable
+OpenFga.Language.DslSyntaxException
+OpenFga.Language.DslSyntaxException.Errors.get -> System.Collections.Generic.IReadOnlyList<OpenFga.Language.SyntaxError!>!
+OpenFga.Language.DslTransformationException
+OpenFga.Language.LanguageError
+OpenFga.Language.LanguageError.File.get -> string?
+OpenFga.Language.LanguageError.Message.get -> string!
+OpenFga.Language.LanguageError.Range.get -> OpenFga.Language.SourceRange?
+OpenFga.Language.ModelValidationError
+OpenFga.Language.ModelValidationError.ConditionName.get -> string?
+OpenFga.Language.ModelValidationError.ErrorType.get -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ModelValidationError.Module.get -> string?
+OpenFga.Language.ModelValidationError.OffendingType.get -> string?
+OpenFga.Language.ModelValidationError.RelationName.get -> string?
+OpenFga.Language.ModelValidationError.Symbol.get -> string?
+OpenFga.Language.ModelValidationError.TypeName.get -> string?
+OpenFga.Language.ModelValidationException
+OpenFga.Language.ModelValidationException.Errors.get -> System.Collections.Generic.IReadOnlyList<OpenFga.Language.ModelValidationError!>!
+OpenFga.Language.ModFileValidationException
+OpenFga.Language.ModFileValidationException.Errors.get -> System.Collections.Generic.IReadOnlyList<OpenFga.Language.LanguageError!>!
+OpenFga.Language.ModuleTransformationError
+OpenFga.Language.ModuleTransformationError.Symbol.get -> string?
+OpenFga.Language.ModuleTransformationException
+OpenFga.Language.ModuleTransformationException.Errors.get -> System.Collections.Generic.IReadOnlyList<OpenFga.Language.LanguageError!>!
+OpenFga.Language.OpenFgaLanguageException
+OpenFga.Language.SourceRange
+OpenFga.Language.SourceRange.EndColumn.get -> int
+OpenFga.Language.SourceRange.EndLine.get -> int
+OpenFga.Language.SourceRange.Equals(OpenFga.Language.SourceRange other) -> bool
+OpenFga.Language.SourceRange.SourceRange() -> void
+OpenFga.Language.SourceRange.SourceRange(int startLine, int endLine, int startColumn, int endColumn) -> void
+OpenFga.Language.SourceRange.StartColumn.get -> int
+OpenFga.Language.SourceRange.StartLine.get -> int
+OpenFga.Language.SyntaxError
+OpenFga.Language.SyntaxError.Symbol.get -> string?
+OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.AllowedTypesNotValidOnSchema1_0 = 15 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.AssignableRelationsMustHaveType = 14 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.ConditionNotDefined = 19 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.ConditionNotUsed = 20 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.DifferentNestedConditionName = 21 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.DuplicatedError = 12 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.InvalidName = 5 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.InvalidRelationOnTupleset = 8 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.InvalidRelationType = 7 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.InvalidSchema = 16 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.InvalidSyntax = 17 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.InvalidType = 9 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.MissingDefinition = 6 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.MultipleModulesInFile = 22 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.RelationNoEntrypoint = 10 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.RequireSchema1_0 = 13 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.ReservedRelationKeywords = 3 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.ReservedTypeKeywords = 2 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.SchemaVersionRequired = 0 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.SchemaVersionUnsupported = 1 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.SelfError = 4 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.TuplesetNotDirect = 11 -> OpenFga.Language.ValidationErrorType
+OpenFga.Language.ValidationErrorType.TypeRestrictionCannotHaveWildcardAndRelation = 18 -> OpenFga.Language.ValidationErrorType
+override OpenFga.Language.LanguageError.ToString() -> string!
+override OpenFga.Language.SourceRange.Equals(object? obj) -> bool
+override OpenFga.Language.SourceRange.GetHashCode() -> int
+override OpenFga.Language.SourceRange.ToString() -> string!
+static OpenFga.Language.SourceRange.operator !=(OpenFga.Language.SourceRange left, OpenFga.Language.SourceRange right) -> bool
+static OpenFga.Language.SourceRange.operator ==(OpenFga.Language.SourceRange left, OpenFga.Language.SourceRange right) -> bool
