@@ -38,6 +38,12 @@
       "package-name": "openfga-language",
       "skip-snapshot": true,
       "extra-files": ["build.gradle"]
+    },
+    "pkg/dotnet": {
+      "release-type": "simple",
+      "component": "pkg/dotnet",
+      "package-name": "OpenFga.Language",
+      "extra-files": ["src/OpenFga.Language/OpenFga.Language.csproj"]
     }
   }
 }

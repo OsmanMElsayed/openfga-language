@@ -39,11 +39,12 @@ OpenFGA is designed to make it easy for application builders to model their perm
 
 ## Packages
 
-| Packages | Package Manager                                                                                                                                                                                                               | Docs                          |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| JS       | [![@openfga/syntax-transformer on npm](https://img.shields.io/npm/v/%40openfga%2Fsyntax-transformer/beta?label=%40openfga%2Fsyntax-transformer&style=flat-square)](https://www.npmjs.com/package/@openfga/syntax-transformer) | [README](/pkg/js/README.md)   |
-| Go       | [![GitHub Release](https://img.shields.io/github/v/release/openfga/language?include_prereleases&filter=pkg%2Fgo%2Fv*&label=openfga-language)](https://github.com/openfga/language/tree/main/pkg/go)                           | [README](/pkg/go/README.md)   |
-| Java     | [![openfga-language on Maven Central](https://img.shields.io/maven-central/v/dev.openfga/openfga-language?style=flat-square&label=openfga-language)](https://central.sonatype.com/artifact/dev.openfga/openfga-language)      | [README](/pkg/java/README.md) |
+| Packages | Package Manager                                                                                                                                                                                                               | Docs                            |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| JS       | [![@openfga/syntax-transformer on npm](https://img.shields.io/npm/v/%40openfga%2Fsyntax-transformer/beta?label=%40openfga%2Fsyntax-transformer&style=flat-square)](https://www.npmjs.com/package/@openfga/syntax-transformer) | [README](/pkg/js/README.md)     |
+| Go       | [![GitHub Release](https://img.shields.io/github/v/release/openfga/language?include_prereleases&filter=pkg%2Fgo%2Fv*&label=openfga-language)](https://github.com/openfga/language/tree/main/pkg/go)                           | [README](/pkg/go/README.md)     |
+| Java     | [![openfga-language on Maven Central](https://img.shields.io/maven-central/v/dev.openfga/openfga-language?style=flat-square&label=openfga-language)](https://central.sonatype.com/artifact/dev.openfga/openfga-language)      | [README](/pkg/java/README.md)   |
+| .NET     | [![OpenFga.Language on NuGet](https://img.shields.io/nuget/v/OpenFga.Language?style=flat-square&label=OpenFga.Language)](https://www.nuget.org/packages/OpenFga.Language)                                                     | [README](/pkg/dotnet/README.md) |
 
 ## About This Repo
 
@@ -55,15 +56,15 @@ This repo contains everything needed to interact with the OpenFGA Authorization 
 | Nesting    | ✅ (partial, see [#113](https://github.com/openfga/language/issues/113)) |
 | Conditions | ✅                                                                       |
 
-| Feature                                               | Go                                                                     | JS                                                                                                      | Java         |
-| ----------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------ |
-| Transformer from the DSL to JSON and from JSON to DSL | ✅                                                                     | ✅                                                                                                      | ✅           |
-| Syntactic Model Validations                           | ✅                                                                     | ✅                                                                                                      | ✅           |
-| Schema 1.0                                            | ❌                                                                     | ❌ (supported in [v0.1.6](https://www.npmjs.com/package/@openfga/syntax-transformer/v/0.1.6) and below) | ❌           |
-| Schema 1.1                                            | ✅                                                                     | ✅ (supported in [v0.2.0](https://www.npmjs.com/package/@openfga/syntax-transformer) and above)         | ✅           |
-| Schema 1.2 (Modular Models)                           | ✅                                                                     | ✅                                                                                                      | ✅           |
-| Semantic Model Validations                            | ❌ (planned, see [#99](https://github.com/openfga/language/issues/99)) | ✅                                                                                                      | ✅           |
-| Graphing & Utility Methods                            | ❌ (planned)                                                           | ❌ (planned)                                                                                            | ❌ (planned) |
+| Feature                                               | Go                                                                     | JS                                                                                                      | Java         | .NET |
+| ----------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------ | ---- |
+| Transformer from the DSL to JSON and from JSON to DSL | ✅                                                                     | ✅                                                                                                      | ✅           | ✅   |
+| Syntactic Model Validations                           | ✅                                                                     | ✅                                                                                                      | ✅           | ✅   |
+| Schema 1.0                                            | ❌                                                                     | ❌ (supported in [v0.1.6](https://www.npmjs.com/package/@openfga/syntax-transformer/v/0.1.6) and below) | ❌           | ❌   |
+| Schema 1.1                                            | ✅                                                                     | ✅ (supported in [v0.2.0](https://www.npmjs.com/package/@openfga/syntax-transformer) and above)         | ✅           | ✅   |
+| Schema 1.2 (Modular Models)                           | ✅                                                                     | ✅                                                                                                      | ✅           | ✅   |
+| Semantic Model Validations                            | ❌ (planned, see [#99](https://github.com/openfga/language/issues/99)) | ✅                                                                                                      | ✅           | ✅   |
+| Graphing & Utility Methods                            | ❌ (planned)                                                           | ❌ (planned)                                                                                            | ❌ (planned) | ❌   |
 
 ## CLI
 

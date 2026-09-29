@@ -10,13 +10,14 @@ OpenFGA Language is a multi-language library providing ANTLR grammar for the Ope
 - npm: `@openfga/syntax-transformer`
 - Go: `github.com/openfga/language/pkg/go`
 - Maven: `dev.openfga/openfga-language`
+- NuGet: `OpenFga.Language`
 
 ## Build Commands
 
 From repository root (requires Docker for ANTLR generation):
 
 ```bash
-make build          # Build all packages (Go, JS, Java)
+make build          # Build all packages (Go, JS, Java, .NET)
 make test           # Run tests for all packages
 make lint           # Lint all packages and test data
 make antlr-gen      # Generate ANTLR parsers for all languages
@@ -54,6 +55,17 @@ make lint-java      # Lint Java code
 cd pkg/java && ./gradlew test --tests "dev.openfga.language.DslToJsonShould"
 ```
 
+### .NET Package (`pkg/dotnet/`)
+
+```bash
+make test-dotnet    # Run xUnit tests
+make lint-dotnet    # dotnet format check + analyzers
+make audit-dotnet   # Check for vulnerable NuGet packages
+
+# Run specific test
+cd pkg/dotnet && dotnet test --filter FullyQualifiedName~ModelValidatorTests
+```
+
 ## Architecture
 
 ```
@@ -68,18 +80,19 @@ cd pkg/java && ./gradlew test --tests "dev.openfga.language.DslToJsonShould"
 │   │   ├── gen/                         # Generated ANTLR parser
 │   │   ├── transformer/                 # DSL↔JSON transformation
 │   │   └── validator/                   # Syntactic + semantic validation
-│   └── java/                            # Java implementation
-│       └── src/main/gen/                # Generated ANTLR parser
+│   ├── java/                            # Java implementation
+│   │   └── src/main/gen/                # Generated ANTLR parser
+│   └── dotnet/                          # .NET implementation (src/OpenFga.Language, Gen/ = generated ANTLR parser)
 └── tests/data/                          # Shared test fixtures (YAML/JSON)
 ```
 
 **Feature parity:**
-| Feature | Go | JS | Java |
-|---------|----|----|------|
-| DSL↔JSON Transformer | ✓ | ✓ | ✓ |
-| Syntactic Validation | ✓ | ✓ | ✓ |
-| Semantic Validation | ✗ | ✓ | ✓ |
-| Graph Utilities | ✓ | ✗ | ✗ |
+| Feature | Go | JS | Java | .NET |
+|---------|----|----|------|------|
+| DSL↔JSON Transformer | ✓ | ✓ | ✓ | ✓ |
+| Syntactic Validation | ✓ | ✓ | ✓ | ✓ |
+| Semantic Validation | ✗ | ✓ | ✓ | ✓ |
+| Graph Utilities | ✓ | ✗ | ✗ | ✗ |
 
 ## Critical: Graph Package (`pkg/go/graph/`)
 
