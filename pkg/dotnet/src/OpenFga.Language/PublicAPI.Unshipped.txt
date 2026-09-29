@@ -6,6 +6,7 @@ OpenFga.Language.LanguageError
 OpenFga.Language.LanguageError.File.get -> string?
 OpenFga.Language.LanguageError.Message.get -> string!
 OpenFga.Language.LanguageError.Range.get -> OpenFga.Language.SourceRange?
+OpenFga.Language.ModelTransformer
 OpenFga.Language.ModelValidationError
 OpenFga.Language.ModelValidationError.ConditionName.get -> string?
 OpenFga.Language.ModelValidationError.ErrorType.get -> OpenFga.Language.ValidationErrorType
@@ -61,5 +62,7 @@ override OpenFga.Language.LanguageError.ToString() -> string!
 override OpenFga.Language.SourceRange.Equals(object? obj) -> bool
 override OpenFga.Language.SourceRange.GetHashCode() -> int
 override OpenFga.Language.SourceRange.ToString() -> string!
+static OpenFga.Language.ModelTransformer.TransformDslToJson(string! dsl) -> string!
+static OpenFga.Language.ModelTransformer.TransformDslToModel(string! dsl) -> OpenFga.Sdk.Model.AuthorizationModel!
 static OpenFga.Language.SourceRange.operator !=(OpenFga.Language.SourceRange left, OpenFga.Language.SourceRange right) -> bool
 static OpenFga.Language.SourceRange.operator ==(OpenFga.Language.SourceRange left, OpenFga.Language.SourceRange right) -> bool
