@@ -1,0 +1,21 @@
+[*.cs]
+# Behaviour must be identical on every runtime (NLS vs ICU), so culture-sensitive string operations are errors (spec §3.2).
+dotnet_diagnostic.CA1304.severity = error
+dotnet_diagnostic.CA1305.severity = error
+dotnet_diagnostic.CA1307.severity = error
+dotnet_diagnostic.CA1309.severity = error
+dotnet_diagnostic.CA1310.severity = error
+dotnet_diagnostic.CA1311.severity = error
+# Exceptions are only ever created by this library; their constructors are internal by design (spec §4.4).
+dotnet_diagnostic.CA1032.severity = none
+
+[src/OpenFga.Language/Gen/**.cs]
+generated_code = true
+
+[test/**.cs]
+# xUnit requires public test classes.
+dotnet_diagnostic.CA1515.severity = none
+# Inline arrays in test data are clearer than hoisted static fields.
+dotnet_diagnostic.CA1861.severity = none
+# Test fixtures favour readable interface types over micro-optimisations.
+dotnet_diagnostic.CA1859.severity = none

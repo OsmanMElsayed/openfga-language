@@ -134,6 +134,41 @@ format-java: antlr-gen-java
 all-tests-java: antlr-gen-java
 	$(MAKE) -C pkg/java all-tests
 
+#### .NET #####
+
+.PHONY: antlr-gen-dotnet
+antlr-gen-dotnet: build-antlr-container
+	${ANTLR_CMD} -Dlanguage=CSharp -o pkg/dotnet/src/OpenFga.Language/Gen -package OpenFga.Language.Antlr /app/OpenFGALexer.g4 /app/OpenFGAParser.g4
+	$(MAKE) -C pkg/dotnet post-antlr-gen
+
+.PHONY: build-dotnet
+build-dotnet: antlr-gen-dotnet
+	$(MAKE) -C pkg/dotnet build
+
+.PHONY: clean-dotnet
+clean-dotnet:
+	$(MAKE) -C pkg/dotnet clean
+
+.PHONY: test-dotnet
+test-dotnet: antlr-gen-dotnet
+	$(MAKE) -C pkg/dotnet test
+
+.PHONY: lint-dotnet
+lint-dotnet: antlr-gen-dotnet
+	$(MAKE) -C pkg/dotnet lint
+
+.PHONY: audit-dotnet
+audit-dotnet: antlr-gen-dotnet
+	$(MAKE) -C pkg/dotnet audit
+
+.PHONY: format-dotnet
+format-dotnet: antlr-gen-dotnet
+	$(MAKE) -C pkg/dotnet format
+
+.PHONY: all-tests-dotnet
+all-tests-dotnet: antlr-gen-dotnet
+	$(MAKE) -C pkg/dotnet all-tests
+
 #### Test data #####
 
 .PHONE: lint-tests
