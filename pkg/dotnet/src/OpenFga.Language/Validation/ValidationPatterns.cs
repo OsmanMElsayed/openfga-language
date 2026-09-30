@@ -32,16 +32,18 @@ internal sealed class ValidationPatterns
         var relationRule = string.IsNullOrEmpty(options.RelationPattern) ? Rules.DefaultRelationPattern : options.RelationPattern;
         return new ValidationPatterns(
             typeRule,
-            Compile(typeRule, "type", paramName),
+            Compile(typeRule, Rules.DefaultTypePattern, "type", paramName),
             relationRule,
-            Compile(relationRule, "relation", paramName));
+            Compile(relationRule, Rules.DefaultRelationPattern, "relation", paramName));
     }
 
-    private static Regex Compile(string pattern, string kind, string paramName)
+    // .NET's `$` also matches before a final newline (JS's does not), so the default patterns are compiled with `\\z`.
+    private static Regex Compile(string pattern, string defaultPattern, string kind, string paramName)
     {
         try
         {
-            return new Regex(pattern, RegexOptions.CultureInvariant, MatchTimeout);
+            var effective = string.Equals(pattern, defaultPattern, StringComparison.Ordinal) ? pattern.Substring(0, pattern.Length - 1) + @"\z" : pattern;
+            return new Regex(effective, RegexOptions.CultureInvariant, MatchTimeout);
         }
         catch (ArgumentException ex)
         {

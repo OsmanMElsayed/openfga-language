@@ -1,3 +1,4 @@
+using System.Text.Json;
 using OpenFga.Language.Tests.Fixtures;
 using OpenFga.Language.Validation;
 using OpenFga.Sdk.Model;
@@ -125,6 +126,23 @@ public class ModelValidatorTests
         Assert.True(
             exception is null or ArgumentException or ModelValidationException,
             $"Unexpected exception: {exception}");
+    }
+
+    [Theory]
+    [InlineData("user\n", "viewer")]
+    [InlineData("doc", "viewer\n")]
+    public void TrailingNewlineInNameIsInvalid(string typeName, string relationName)
+    {
+        var type = JsonSerializer.Serialize(typeName);
+        var relation = JsonSerializer.Serialize(relationName);
+        var json = "{\"schema_version\":\"1.1\",\"type_definitions\":[{\"type\":\"user\"},{\"type\":" + type
+            + ",\"relations\":{" + relation + ":{\"this\":{}}},\"metadata\":{\"relations\":{" + relation
+            + ":{\"directly_related_user_types\":[{\"type\":\"user\"}]}}}}]}";
+        var model = AuthorizationModel.FromJson(json);
+
+        var exception = Assert.Throws<ModelValidationException>(() => ModelValidator.Validate(model));
+
+        Assert.Contains(exception.Errors, error => error.ErrorType == ValidationErrorType.InvalidName);
     }
 
     [Fact]
