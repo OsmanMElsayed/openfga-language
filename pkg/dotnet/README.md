@@ -5,7 +5,7 @@
 Parse, transform and validate [OpenFGA](https://openfga.dev) authorization models in .NET. Models use the
 [`OpenFga.Sdk`](https://www.nuget.org/packages/OpenFga.Sdk) types, so a transformed model can be written with `OpenFgaClient`.
 
-Targets .NET Standard 2.0 (.NET Framework 4.6.1+, .NET 8+).
+Targets .NET Standard 2.0 (.NET Framework 4.7.2+, .NET 8+).
 
 ## Installation
 
@@ -34,8 +34,9 @@ var dslFromJson = ModelTransformer.TransformJsonToDsl(json);
 ### Modular models
 
 ```csharp
-var modFile = ModFile.Parse(File.ReadAllText("fga.mod"));
-var modules = modFile.Contents.Select(path => new ModuleFile(path, File.ReadAllText(path)));
+var modPath = "fga.mod";
+var modFile = ModFile.Parse(File.ReadAllText(modPath));
+var modules = modFile.Contents.Select(path => new ModuleFile(path, File.ReadAllText(Path.Combine(Path.GetDirectoryName(modPath)!, path))));
 var model = ModelTransformer.TransformModulesToModel(modules, modFile.Schema);
 ```
 
@@ -59,8 +60,9 @@ catch (ModelValidationException ex)
 TupleSyntax.IsValidObject("document:budget"); // true
 ```
 
-All problems in the input are reported as exceptions deriving from `OpenFgaLanguageException`, each exposing an
-`Errors` list with zero-based source ranges.
+All problems in the input are reported as exceptions deriving from `OpenFgaLanguageException`. `DslTransformationException`
+carries only a message; the other exceptions (`DslSyntaxException`, `ModelValidationException`, `ModFileValidationException`,
+...) each expose an `Errors` list with zero-based source ranges.
 
 ## License
 
