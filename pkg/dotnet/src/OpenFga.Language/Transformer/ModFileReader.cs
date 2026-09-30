@@ -66,7 +66,9 @@ internal static class ModFileReader
                 // Reject directory traversal and absolute paths.
                 if (fileName.IndexOf("../", StringComparison.Ordinal) >= 0
                     || fileName.IndexOf("..\\", StringComparison.Ordinal) >= 0
-                    || fileName.StartsWith("/", StringComparison.Ordinal))
+                    || fileName.StartsWith("/", StringComparison.Ordinal)
+                    || fileName.StartsWith("\\", StringComparison.Ordinal)
+                    || (fileName.Length >= 2 && fileName[1] == ':' && IsAsciiLetter(fileName[0])))
                 {
                     errors.Add(LanguageErrors.ModFile($"invalid contents item {original}", RangeOf(item)));
                     continue;
@@ -200,8 +202,18 @@ internal static class ModFileReader
             return lower.StartsWith("-", StringComparison.Ordinal) ? "-Infinity" : "Infinity";
         }
 
-        return double.Parse(value, NumberStyles.Float, CultureInfo.InvariantCulture).ToString("R", CultureInfo.InvariantCulture);
+        try
+        {
+            return double.Parse(value, NumberStyles.Float, CultureInfo.InvariantCulture).ToString("R", CultureInfo.InvariantCulture);
+        }
+        catch (OverflowException)
+        {
+            // .NET Framework throws for values beyond double's range; .NET Core returns infinity.
+            return value;
+        }
     }
+
+    private static bool IsAsciiLetter(char c) => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 
     // Decode URI-encoded dots and slashes so encoded traversal (%2e%2e%2f) is caught.
     private static string DecodePath(string value)

@@ -67,4 +67,24 @@ public class ModFileTests
 
         Assert.Equal("unexpected schema type, expected string got value 0xFFFFFFFFFFFFFFFFF", Assert.Single(exception.Errors).Message);
     }
+
+    [Fact]
+    public void OverflowingDoubleSchemaIsReportedNotThrown()
+    {
+        var exception = Assert.Throws<ModFileValidationException>(() => ModFile.Parse("schema: 1e400\ncontents:\n  - core.fga\n"));
+
+        Assert.StartsWith("unexpected schema type, expected string got value ", Assert.Single(exception.Errors).Message, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData(@"C:\x\a.fga")]
+    [InlineData("C:/x/a.fga")]
+    [InlineData(@"\\srv\a.fga")]
+    [InlineData(@"\a.fga")]
+    public void WindowsAbsolutePathsAreRejected(string path)
+    {
+        var exception = Assert.Throws<ModFileValidationException>(() => ModFile.Parse($"schema: '1.2'\ncontents:\n  - '{path}'\n"));
+
+        Assert.Equal($"invalid contents item {path}", Assert.Single(exception.Errors).Message);
+    }
 }
