@@ -13,14 +13,18 @@ internal static class ModelJson
 {
     private const string InvalidJson = "The value is not a valid authorization model JSON document.";
 
-    public static string Serialize(AuthorizationModel model) => model.ToJson();
+    // The default MaxDepth (64) is too shallow for deeply nested union/intersection/difference DSL relations;
+    // raise it for serialize, deserialize and clone alike so all three agree on what is representable.
+    private static readonly JsonSerializerOptions Options = new() { MaxDepth = 1024 };
+
+    public static string Serialize(AuthorizationModel model) => JsonSerializer.Serialize(model, Options);
 
     public static AuthorizationModel Deserialize(string json, string paramName)
     {
         AuthorizationModel? model;
         try
         {
-            model = JsonSerializer.Deserialize<AuthorizationModel>(json);
+            model = JsonSerializer.Deserialize<AuthorizationModel>(json, Options);
         }
         catch (JsonException ex)
         {
@@ -30,5 +34,5 @@ internal static class ModelJson
         return model ?? throw new ArgumentException(InvalidJson, paramName);
     }
 
-    public static AuthorizationModel Clone(AuthorizationModel model) => JsonSerializer.Deserialize<AuthorizationModel>(model.ToJson())!;
+    public static AuthorizationModel Clone(AuthorizationModel model) => JsonSerializer.Deserialize<AuthorizationModel>(Serialize(model), Options)!;
 }

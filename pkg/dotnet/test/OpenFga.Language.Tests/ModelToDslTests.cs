@@ -128,6 +128,24 @@ public class ModelToDslTests
     }
 
     [Fact]
+    public void DeeplyNestedUnionsDoNotExceedDefaultJsonMaxDepth()
+    {
+        const int depth = 30;
+        var nested = $"u{depth - 1}";
+        for (var i = depth - 2; i >= 0; i--)
+        {
+            nested = $"(u{i} or {nested})";
+        }
+
+        var relations = string.Join("\n", Enumerable.Range(0, depth).Select(i => $"    define u{i}: [user]"));
+        var dsl = $"model\n  schema 1.1\ntype user\ntype doc\n  relations\n{relations}\n    define viewer: [user] or {nested}\n";
+
+        var json = ModelTransformer.TransformDslToJson(dsl);
+        ModelTransformer.TransformJsonToDsl(json);
+        ModelTransformer.TransformModelToDsl(ModelTransformer.TransformDslToModel(dsl));
+    }
+
+    [Fact]
     public void DslRoundTripsThroughModel()
     {
         foreach (var testCase in Transformer)
