@@ -13,6 +13,7 @@ on:
           - pkg/go
           - pkg/js
           - pkg/java
+          - pkg/dotnet
       bump-type:
         description: "Version bump"
         type: choice

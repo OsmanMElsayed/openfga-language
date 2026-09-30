@@ -8,7 +8,7 @@ on:
         type: string
         required: true
       target-package:
-        description: "Component to target: all | pkg/go | pkg/js | pkg/java"
+        description: "Component to target: all | pkg/go | pkg/js | pkg/java | pkg/dotnet"
         type: string
         required: false
         default: "all"
