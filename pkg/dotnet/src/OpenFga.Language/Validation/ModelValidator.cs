@@ -20,6 +20,7 @@ public static class ModelValidator
     /// <param name="options">The naming rules.</param>
     /// <exception cref="ArgumentNullException"><paramref name="dsl"/> or <paramref name="options"/> is null.</exception>
     /// <exception cref="ArgumentException">A pattern in <paramref name="options"/> is not a valid regular expression.</exception>
+    /// <exception cref="System.Text.RegularExpressions.RegexMatchTimeoutException">A naming pattern exceeded its 1-second match timeout.</exception>
     /// <exception cref="DslSyntaxException">The DSL does not parse.</exception>
     /// <exception cref="ModelValidationException">The model is invalid; errors carry source ranges.</exception>
     public static void Validate(string dsl, ModelValidationOptions options)
@@ -55,6 +56,7 @@ public static class ModelValidator
     /// <param name="options">The naming rules.</param>
     /// <exception cref="ArgumentNullException"><paramref name="model"/> or <paramref name="options"/> is null.</exception>
     /// <exception cref="ArgumentException">A pattern in <paramref name="options"/> is not a valid regular expression.</exception>
+    /// <exception cref="System.Text.RegularExpressions.RegexMatchTimeoutException">A naming pattern exceeded its 1-second match timeout.</exception>
     /// <exception cref="ModelValidationException">The model is invalid; errors have no source ranges.</exception>
     public static void Validate(AuthorizationModel model, ModelValidationOptions options)
     {

@@ -37,7 +37,7 @@ internal sealed class ValidationPatterns
             Compile(relationRule, Rules.DefaultRelationPattern, "relation", paramName));
     }
 
-    // .NET's `$` also matches before a final newline (JS's does not), so the default patterns are compiled with `\\z`.
+    // .NET's `$` also matches before a final newline (JS's does not), so the default patterns are compiled with `\z`.
     private static Regex Compile(string pattern, string defaultPattern, string kind, string paramName)
     {
         try
