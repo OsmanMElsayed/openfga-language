@@ -11,7 +11,7 @@ public readonly struct SourceRange : IEquatable<SourceRange>
     /// <param name="endLine">Zero-based line where the span ends.</param>
     /// <param name="startColumn">Zero-based column where the span starts.</param>
     /// <param name="endColumn">Zero-based column where the span ends (exclusive).</param>
-    public SourceRange(int startLine, int endLine, int startColumn, int endColumn)
+    internal SourceRange(int startLine, int endLine, int startColumn, int endColumn)
     {
         StartLine = startLine;
         EndLine = endLine;

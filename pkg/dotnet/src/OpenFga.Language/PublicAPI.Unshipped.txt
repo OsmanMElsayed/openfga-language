@@ -36,7 +36,6 @@ OpenFga.Language.SourceRange.EndColumn.get -> int
 OpenFga.Language.SourceRange.EndLine.get -> int
 OpenFga.Language.SourceRange.Equals(OpenFga.Language.SourceRange other) -> bool
 OpenFga.Language.SourceRange.SourceRange() -> void
-OpenFga.Language.SourceRange.SourceRange(int startLine, int endLine, int startColumn, int endColumn) -> void
 OpenFga.Language.SourceRange.StartColumn.get -> int
 OpenFga.Language.SourceRange.StartLine.get -> int
 OpenFga.Language.SyntaxError
