@@ -5,7 +5,7 @@ using OpenFga.Language.Errors;
 
 namespace OpenFga.Language.Parsing;
 
-/// <summary>Collects lexer and parser errors as <see cref="OpenFga.Language.Errors.SyntaxError"/> (JS OpenFgaDslErrorListener).</summary>
+/// <summary>Collects lexer and parser errors as <see cref="Errors.SyntaxError"/> (JS OpenFgaDslErrorListener).</summary>
 internal sealed class DslErrorListener : IAntlrErrorListener<IToken>, IAntlrErrorListener<int>
 {
     public List<SyntaxError> Errors { get; } = [];
