@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace OpenFga.Language;
+namespace OpenFga.Language.Errors;
 
-/// <summary>Categories of semantic model errors. Each maps to the error code shared with the Go, JS and Java libraries.</summary>
+/// <summary>Categories of semantic model errors. Each corresponds to a stable error code, shown in parentheses on each member.</summary>
 public enum ValidationErrorType
 {
     /// <summary>The model has no schema version (<c>schema-version-required</c>).</summary>

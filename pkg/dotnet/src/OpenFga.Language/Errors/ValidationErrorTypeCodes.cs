@@ -1,6 +1,6 @@
 using System;
 
-namespace OpenFga.Language;
+namespace OpenFga.Language.Errors;
 
 internal static class ValidationErrorTypeCodes
 {

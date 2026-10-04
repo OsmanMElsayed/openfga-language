@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace OpenFga.Language;
+namespace OpenFga.Language.Errors;
 
 /// <summary>Thrown when DSL text does not parse. <see cref="Errors"/> lists every syntax error found.</summary>
 public sealed class DslSyntaxException : OpenFgaLanguageException

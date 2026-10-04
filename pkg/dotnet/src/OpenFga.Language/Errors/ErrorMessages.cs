@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace OpenFga.Language;
+namespace OpenFga.Language.Errors;
 
 internal static class ErrorMessages
 {
-    /// <summary>JS BaseMultiError format: <c>"{n} error(s) occurred:\n\t* {e1}\n\t* {e2}\n\n"</c>.</summary>
+    /// <summary>Formats several errors as one message: <c>"{n} error(s) occurred:\n\t* {e1}\n\t* {e2}\n\n"</c>.</summary>
     public static string Aggregate(IReadOnlyCollection<LanguageError> errors)
         => string.Format(
             CultureInfo.InvariantCulture,

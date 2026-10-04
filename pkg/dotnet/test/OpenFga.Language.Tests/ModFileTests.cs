@@ -1,5 +1,7 @@
 using System.Text.Json.Nodes;
+using OpenFga.Language.Errors;
 using OpenFga.Language.Tests.Fixtures;
+using OpenFga.Language.Transformer;
 
 namespace OpenFga.Language.Tests;
 

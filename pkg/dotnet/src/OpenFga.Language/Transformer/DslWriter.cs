@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OpenFga.Language.Internal;
+using OpenFga.Language.Errors;
 using OpenFga.Language.Parsing;
+using OpenFga.Language.Utilities;
 using OpenFga.Sdk.Model;
 
 namespace OpenFga.Language.Transformer;

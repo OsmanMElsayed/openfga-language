@@ -1,4 +1,5 @@
-using OpenFga.Language.Internal;
+using OpenFga.Language.Errors;
+using OpenFga.Language.Utilities;
 using OpenFga.Language.Validation;
 using OpenFga.Sdk.Model;
 

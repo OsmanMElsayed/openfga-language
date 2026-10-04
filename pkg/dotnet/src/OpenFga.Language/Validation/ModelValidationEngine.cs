@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using OpenFga.Language.Internal;
+using OpenFga.Language.Errors;
+using OpenFga.Language.Utilities;
 using OpenFga.Sdk.Model;
 
 namespace OpenFga.Language.Validation;

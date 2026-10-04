@@ -1,6 +1,6 @@
 using System;
 
-namespace OpenFga.Language;
+namespace OpenFga.Language.Errors;
 
 /// <summary>Base class for every problem this library reports about its input.</summary>
 public abstract class OpenFgaLanguageException : Exception

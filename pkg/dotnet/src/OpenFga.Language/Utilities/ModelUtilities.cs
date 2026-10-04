@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using OpenFga.Language.Internal;
 using OpenFga.Sdk.Model;
 
 namespace OpenFga.Language.Utilities;

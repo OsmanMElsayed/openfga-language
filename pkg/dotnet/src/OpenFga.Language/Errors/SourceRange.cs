@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace OpenFga.Language;
+namespace OpenFga.Language.Errors;
 
 /// <summary>A span of source text. All values are zero-based.</summary>
 public readonly struct SourceRange : IEquatable<SourceRange>

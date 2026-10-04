@@ -1,4 +1,6 @@
+using OpenFga.Language.Errors;
 using OpenFga.Language.Tests.Fixtures;
+using OpenFga.Language.Transformer;
 using OpenFga.Sdk.Model;
 
 namespace OpenFga.Language.Tests;

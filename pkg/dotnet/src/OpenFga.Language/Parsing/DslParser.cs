@@ -4,6 +4,7 @@ using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using OpenFga.Language.Antlr;
+using OpenFga.Language.Errors;
 using OpenFga.Sdk.Model;
 
 namespace OpenFga.Language.Parsing;

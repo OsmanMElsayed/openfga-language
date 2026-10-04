@@ -1,4 +1,4 @@
-namespace OpenFga.Language;
+namespace OpenFga.Language.Errors;
 
 /// <summary>A semantic problem in an authorization model.</summary>
 public sealed class ModelValidationError : LanguageError

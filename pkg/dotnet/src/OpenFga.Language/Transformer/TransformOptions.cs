@@ -1,4 +1,4 @@
-namespace OpenFga.Language;
+namespace OpenFga.Language.Transformer;
 
 /// <summary>Options for writing a model as DSL.</summary>
 public sealed class TransformOptions

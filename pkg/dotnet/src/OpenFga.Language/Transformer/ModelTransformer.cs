@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenFga.Language.Errors;
 using OpenFga.Language.Parsing;
-using OpenFga.Language.Transformer;
 using OpenFga.Sdk.Model;
 
-namespace OpenFga.Language;
+namespace OpenFga.Language.Transformer;
 
 /// <summary>Converts OpenFGA models between the DSL, JSON and <see cref="AuthorizationModel"/>.</summary>
 public static class ModelTransformer

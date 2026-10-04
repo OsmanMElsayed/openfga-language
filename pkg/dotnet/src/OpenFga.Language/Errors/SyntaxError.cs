@@ -1,4 +1,4 @@
-namespace OpenFga.Language;
+namespace OpenFga.Language.Errors;
 
 /// <summary>A DSL syntax error reported by the parser.</summary>
 public sealed class SyntaxError : LanguageError

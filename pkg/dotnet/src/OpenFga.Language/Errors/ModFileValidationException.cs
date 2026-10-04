@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace OpenFga.Language;
+namespace OpenFga.Language.Errors;
 
 /// <summary>Thrown when an <c>fga.mod</c> file is invalid. <see cref="Errors"/> lists every problem found.</summary>
 public sealed class ModFileValidationException : OpenFgaLanguageException

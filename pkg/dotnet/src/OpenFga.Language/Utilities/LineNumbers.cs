@@ -1,7 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace OpenFga.Language.Internal;
+namespace OpenFga.Language.Utilities;
 
 /// <summary>Finds definition lines in DSL text (JS util/line-numbers.ts). Names are matched literally.</summary>
 internal static class LineNumbers

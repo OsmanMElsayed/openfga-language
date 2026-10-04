@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using OpenFga.Language.Internal;
+using OpenFga.Language.Utilities;
 using OpenFga.Sdk.Model;
 
 namespace OpenFga.Language.Validation;

@@ -1,4 +1,4 @@
-namespace OpenFga.Language;
+namespace OpenFga.Language.Errors;
 
 /// <summary>A problem combining module files into one model (duplicate definitions, unknown extended types, ...).</summary>
 public sealed class ModuleTransformationError : LanguageError

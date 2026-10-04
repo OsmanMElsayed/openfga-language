@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace OpenFga.Language;
+namespace OpenFga.Language.Errors;
 
 /// <summary>A single problem found in DSL, JSON, module or <c>fga.mod</c> input.</summary>
 public class LanguageError

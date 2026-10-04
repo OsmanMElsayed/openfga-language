@@ -1,3 +1,5 @@
+using OpenFga.Language.Errors;
+
 namespace OpenFga.Language.Tests.Fixtures;
 
 internal static class ErrorAssert

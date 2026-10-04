@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using OpenFga.Language.Errors;
 using OpenFga.Language.Parsing;
 using OpenFga.Sdk.Model;
 

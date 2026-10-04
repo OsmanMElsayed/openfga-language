@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OpenFga.Language.Internal;
+namespace OpenFga.Language.Utilities;
 
 internal static class CollectionExtensions
 {

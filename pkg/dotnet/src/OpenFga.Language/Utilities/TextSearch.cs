@@ -1,7 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace OpenFga.Language.Internal;
+namespace OpenFga.Language.Utilities;
 
 /// <summary>Column resolution shared by validation and module combining (JS <c>line.search(new RegExp("\\b" + symbol + "\\b"))</c>).</summary>
 internal static class TextSearch

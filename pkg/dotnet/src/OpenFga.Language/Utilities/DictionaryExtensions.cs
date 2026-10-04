@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace OpenFga.Language.Internal;
+namespace OpenFga.Language.Utilities;
 
 internal static class DictionaryExtensions
 {
