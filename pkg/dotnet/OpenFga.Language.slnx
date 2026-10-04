@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OpenFga.Language/OpenFga.Language.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/OpenFga.Language.Tests/OpenFga.Language.Tests.csproj" />
+  </Folder>
+</Solution>

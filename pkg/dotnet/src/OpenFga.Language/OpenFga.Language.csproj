@@ -2,18 +2,24 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>OpenFga.Language</RootNamespace>
     <AssemblyName>OpenFga.Language</AssemblyName>
     <PackageId>OpenFga.Language</PackageId>
-    <Version>0.1.0</Version> <!-- x-release-please-version -->
+    <OutputType>Library</OutputType>
     <Authors>OpenFGA</Authors>
+    <Company>OpenFGA</Company>
+    <AssemblyTitle>OpenFGA Language for .NET</AssemblyTitle>
     <Description>OpenFGA DSL parser, DSL/JSON transformer and model validator for .NET.</Description>
+    <Copyright>OpenFGA</Copyright>
+    <RootNamespace>OpenFga.Language</RootNamespace>
+    <Version>0.1.0</Version><!-- x-release-please-version -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageProjectUrl>https://github.com/openfga/language</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/openfga/language</RepositoryUrl>
+    <RepositoryUrl>https://github.com/openfga/language.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>https://github.com/openfga/language/blob/main/pkg/dotnet/CHANGELOG.md</PackageReleaseNotes>
     <PackageTags>openfga;authorization;fga;fine-grained-authorization;rebac;zanzibar</PackageTags>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageIcon>FGAIcon.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -24,13 +30,11 @@
     <PackageReference Include="OpenFga.Sdk" Version="0.10.4" />
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
     <PackageReference Include="YamlDotNet" Version="18.1.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="5.6.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="PublicAPI.Shipped.txt" />
-    <AdditionalFiles Include="PublicAPI.Unshipped.txt" />
-    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\assets\FGAIcon.png" Pack="true" Visible="false" PackagePath="" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="" />
     <InternalsVisibleTo Include="OpenFga.Language.Tests" />
   </ItemGroup>
 
