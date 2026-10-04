@@ -6,6 +6,21 @@ on:
     tags:
       - "pkg/dotnet/v*"
 
+concurrency:
+  # Prevent duplicate publishes for the same ref (tag/branch) running concurrently
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  # Suppress .NET first-time experience and telemetry
+  # Source: https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
 jobs:
   test:
     permissions:
@@ -13,12 +28,10 @@ jobs:
     uses: ./.github/workflows/pkg-dotnet-build.yaml
     secrets: inherit
 
-  publish:
+  pack:
     runs-on: ubuntu-latest
+    name: Pack NuGet
     needs: [test]
-    permissions:
-      contents: read
-      id-token: write # NuGet trusted publishing (OIDC)
     defaults:
       run:
         working-directory: "pkg/dotnet"
@@ -33,24 +46,112 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
-      - name: Pack
-        run: dotnet pack src/OpenFga.Language/OpenFga.Language.csproj -c Release -o artifacts
+      - name: Restore dependencies
+        run: dotnet restore src/OpenFga.Language/OpenFga.Language.csproj --verbosity minimal
 
-      - name: NuGet login
-        id: login
+      - name: Build
+        run: dotnet build src/OpenFga.Language/OpenFga.Language.csproj --no-restore --configuration Release -p:ContinuousIntegrationBuild=true --verbosity minimal
+
+      - name: Pack
+        # Produce both the primary NuGet package (.nupkg) and the symbol package (.snupkg)
+        run: |
+          dotnet pack src/OpenFga.Language/OpenFga.Language.csproj \
+            --no-build \
+            --configuration Release \
+            -p:ContinuousIntegrationBuild=true \
+            -p:IncludeSymbols=true \
+            -p:SymbolPackageFormat=snupkg \
+            -p:DebugType=portable \
+            -o artifact-pack
+
+      - name: List produced packages
+        run: ls -la artifact-pack
+
+      - name: Upload NuGet package artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: nuget-package
+          path: |
+            pkg/dotnet/artifact-pack/*.nupkg
+            pkg/dotnet/artifact-pack/*.snupkg
+          retention-days: 7
+
+  verify-version:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/pkg/dotnet/v') && !contains(github.ref, '-test')
+    needs: [pack]
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Verify versions match
+        run: |
+          TAG_VERSION="${GITHUB_REF#refs/tags/pkg/dotnet/v}"
+          MANIFEST_VERSION=$(jq -r '.["pkg/dotnet"]' .release-please-manifest.json)
+          CSPROJ_VERSION=$(grep 'x-release-please-version' pkg/dotnet/src/OpenFga.Language/OpenFga.Language.csproj | grep -oP '>\K[^<]+')
+
+          echo "Tag: $TAG_VERSION | Manifest: $MANIFEST_VERSION | .csproj: $CSPROJ_VERSION"
+
+          if [[ "$TAG_VERSION" != "$MANIFEST_VERSION" ]]; then
+            echo "ERROR: Tag version does not match manifest version"
+            exit 1
+          fi
+          if [[ "$CSPROJ_VERSION" != "$MANIFEST_VERSION" ]]; then
+            echo "ERROR: .csproj version does not match manifest version"
+            exit 1
+          fi
+          echo "All versions verified: $TAG_VERSION"
+
+  publish:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/pkg/dotnet/v') && !contains(github.ref, '-test')
+    needs: [pack, verify-version]
+    permissions:
+      id-token: write # For OIDC authentication with NuGet.org
+      packages: write # For publishing to the GitHub Nuget Registry
+      contents: read
+
+    steps:
+      - name: Set up .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Download package artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v4.1.8
+        with:
+          name: nuget-package
+          path: ./dist
+
+      - name: NuGet login (OIDC)
         uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+        id: login
         with:
           user: ${{ secrets.NUGET_USER }}
 
-      - name: Publish package
-        run: dotnet nuget push "artifacts/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+      - name: Publish to NuGet
+        run: |
+          echo "Publishing primary package to NuGet (.nupkg)...";
+          dotnet nuget push dist/OpenFga.Language.*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --skip-duplicate --source https://api.nuget.org/v3/index.json
+          echo "Publishing symbol package to NuGet (.snupkg)...";
+          dotnet nuget push dist/OpenFga.Language.*.snupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --skip-duplicate --source https://api.nuget.org/v3/index.json || echo "No symbol package found or already published."
+
+      - name: Publish to GitHub Package Registry
+        continue-on-error: true
+        run: |
+          echo "Publishing primary package to GitHub Package Registry (.nupkg)...";
+          dotnet nuget push dist/OpenFga.Language.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate --source https://nuget.pkg.github.com/openfga/index.json
+          echo "Publishing symbol package to GitHub Package Registry (.snupkg)...";
+          dotnet nuget push dist/OpenFga.Language.*.snupkg --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate --source https://nuget.pkg.github.com/openfga/index.json || echo "No symbol package found or already published."
 
   # The release-please post-release job already created a draft GitHub release when it pushed this tag.
   # Publish (undraft) it only after the NuGet publish succeeded.
+  # dotnet-sdk uses openfga/.github's undraft-release.yml, but that workflow only treats `vX.Y.Z` as a
+  # stable release and would mark this repo's `pkg/dotnet/vX.Y.Z` tags as pre-releases.
   finalize-release:
     runs-on: ubuntu-latest
     needs: [publish]
-    if: startsWith(github.ref, 'refs/tags/')
+    if: startsWith(github.ref, 'refs/tags/pkg/dotnet/v') && !contains(github.ref, '-test')
     permissions:
       contents: write # publish (undraft) the github release
     steps:
