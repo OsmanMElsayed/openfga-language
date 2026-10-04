@@ -69,7 +69,7 @@ pkg/dotnet/
 │   │   ├── DslErrorListener.cs                  ANTLR errors -> SyntaxError
 │   │   ├── DslListener.cs                       parse tree -> AuthorizationModel
 │   │   └── ConditionTypeNames.cs                DSL param type <-> SDK TypeName enum
-│   ├── Transformer/
+│   ├── Transformation/
 │   │   ├── ModelTransformer.cs                  public static entry points
 │   │   ├── TransformOptions.cs  ModuleFile.cs  ModFile.cs   public
 │   │   ├── ModelJson.cs                         SDK JSON (de)serialization + clone
@@ -1046,7 +1046,7 @@ Port of `pkg/js/transformer/dsltojson.ts`. This task also builds the shared fixt
 **Files:**
 - Create: `pkg/dotnet/src/OpenFga.Language/Internal/DictionaryExtensions.cs`
 - Create: `pkg/dotnet/src/OpenFga.Language/Parsing/DslParser.cs`, `DslErrorListener.cs`, `DslListener.cs`, `ConditionTypeNames.cs`
-- Create: `pkg/dotnet/src/OpenFga.Language/Transformer/ModelTransformer.cs`, `ModelJson.cs`
+- Create: `pkg/dotnet/src/OpenFga.Language/Transformation/ModelTransformer.cs`, `ModelJson.cs`
 - Modify: `pkg/dotnet/src/OpenFga.Language/PublicAPI.Unshipped.txt`
 - Create: `pkg/dotnet/test/OpenFga.Language.Tests/Fixtures/FixturePaths.cs`, `FixtureModels.cs`, `TestData.cs`, `JsonAssert.cs`, `ErrorAssert.cs`
 - Test: `pkg/dotnet/test/OpenFga.Language.Tests/DslToModelTests.cs`
@@ -1058,7 +1058,7 @@ Port of `pkg/js/transformer/dsltojson.ts`. This task also builds the shared fixt
   - `internal static class DslParser { static DslParseResult Parse(string dsl) }` (namespace `OpenFga.Language.Parsing`).
   - `internal sealed class DslParseResult { AuthorizationModel Model; IReadOnlyDictionary<string, TypeDefinition> TypeDefExtensions; IReadOnlyList<SyntaxError> Errors; }`.
   - `internal static class ConditionTypeNames { static TypeName FromDsl(string); static string ToDsl(TypeName) }`.
-  - `internal static class ModelJson { static string Serialize(AuthorizationModel); static AuthorizationModel Deserialize(string json, string paramName); static AuthorizationModel Clone(AuthorizationModel) }` (namespace `OpenFga.Language.Transformer`).
+  - `internal static class ModelJson { static string Serialize(AuthorizationModel); static AuthorizationModel Deserialize(string json, string paramName); static AuthorizationModel Clone(AuthorizationModel) }` (namespace `OpenFga.Language.Transformation`).
   - `internal static class DictionaryExtensions { static TValue? GetOrNull<TValue>(this IDictionary<string, TValue>? d, string key) where TValue : class }` (namespace `OpenFga.Language.Internal`).
   - Test helpers (namespace `OpenFga.Language.Tests.Fixtures`): `FixturePaths.Read(params string[])`, `TestData.TransformerCases()`, `TestData.DslSyntaxCases()`, `TestData.DslSemanticCases()`, `TestData.JsonValidationCases()`, `TestData.JsonSyntaxTransformerCases()`, `TestData.ModFileCases()`, `TestData.ObjectIdCases()`, `TestData.ModuleCases()`, `TestData.Indexes<T>(IReadOnlyList<T>, Func<T,string>)`, `JsonAssert.Equivalent(string, string)`, `ErrorAssert.AllMatch(IReadOnlyList<ExpectedError>, IReadOnlyList<LanguageError>)`, `ErrorAssert.ExpectedAggregate(IReadOnlyList<ExpectedError>, Func<ExpectedError,string> kind, bool includeLocation)`.
 
@@ -1557,13 +1557,13 @@ internal static class ConditionTypeNames
 }
 ```
 
-`src/OpenFga.Language/Transformer/ModelJson.cs`:
+`src/OpenFga.Language/Transformation/ModelJson.cs`:
 ```csharp
 using System;
 using System.Text.Json;
 using OpenFga.Sdk.Model;
 
-namespace OpenFga.Language.Transformer;
+namespace OpenFga.Language.Transformation;
 
 /// <summary>
 /// JSON uses the SDK's own System.Text.Json contract (attributes on the model types), so output is what OpenFgaClient
@@ -2092,11 +2092,11 @@ internal sealed class DslListener : OpenFGAParserBaseListener
 
 - [ ] **Step 6: Implement the public entry points**
 
-`src/OpenFga.Language/Transformer/ModelTransformer.cs`:
+`src/OpenFga.Language/Transformation/ModelTransformer.cs`:
 ```csharp
 using System;
 using OpenFga.Language.Parsing;
-using OpenFga.Language.Transformer;
+using OpenFga.Language.Transformation;
 using OpenFga.Sdk.Model;
 
 namespace OpenFga.Language;
@@ -2172,8 +2172,8 @@ Claude-Session: https://claude.ai/code/session_01U8M7PfSCNGaz27dr4xJPEu"
 Port of `pkg/js/transformer/jsontodsl.ts` (without `getModulesFromJSON`, which is out of scope).
 
 **Files:**
-- Create: `pkg/dotnet/src/OpenFga.Language/Transformer/TransformOptions.cs`, `DslWriter.cs`
-- Modify: `pkg/dotnet/src/OpenFga.Language/Transformer/ModelTransformer.cs`, `PublicAPI.Unshipped.txt`
+- Create: `pkg/dotnet/src/OpenFga.Language/Transformation/TransformOptions.cs`, `DslWriter.cs`
+- Modify: `pkg/dotnet/src/OpenFga.Language/Transformation/ModelTransformer.cs`, `PublicAPI.Unshipped.txt`
 - Test: `pkg/dotnet/test/OpenFga.Language.Tests/ModelToDslTests.cs`
 
 **Interfaces:**
@@ -2316,7 +2316,7 @@ Expected: build FAILS with CS0117 (`ModelTransformer` has no `TransformJsonToDsl
 
 - [ ] **Step 3: Implement `TransformOptions` and `DslWriter`**
 
-`src/OpenFga.Language/Transformer/TransformOptions.cs`:
+`src/OpenFga.Language/Transformation/TransformOptions.cs`:
 ```csharp
 namespace OpenFga.Language;
 
@@ -2331,7 +2331,7 @@ public sealed class TransformOptions
 }
 ```
 
-`src/OpenFga.Language/Transformer/DslWriter.cs`:
+`src/OpenFga.Language/Transformation/DslWriter.cs`:
 ```csharp
 using System;
 using System.Collections.Generic;
@@ -2341,7 +2341,7 @@ using OpenFga.Language.Internal;
 using OpenFga.Language.Parsing;
 using OpenFga.Sdk.Model;
 
-namespace OpenFga.Language.Transformer;
+namespace OpenFga.Language.Transformation;
 
 /// <summary>
 /// Writes an AuthorizationModel as DSL (JS jsontodsl.ts). Like JS, it reorders union/intersection children in place
@@ -2644,7 +2644,7 @@ internal static class DslWriter
 
 - [ ] **Step 4: Add the public entry points**
 
-Append to `ModelTransformer` (in `Transformer/ModelTransformer.cs`):
+Append to `ModelTransformer` (in `Transformation/ModelTransformer.cs`):
 ```csharp
     /// <summary>Writes a model as DSL.</summary>
     /// <param name="model">The model; it is not modified.</param>
@@ -4815,13 +4815,13 @@ Claude-Session: https://claude.ai/code/session_01U8M7PfSCNGaz27dr4xJPEu"
 Port of `pkg/js/transformer/modules/mod-to-json.ts` using YamlDotNet.
 
 **Files:**
-- Create: `pkg/dotnet/src/OpenFga.Language/Transformer/ModFile.cs`, `ModFileReader.cs`
+- Create: `pkg/dotnet/src/OpenFga.Language/Transformation/ModFile.cs`, `ModFileReader.cs`
 - Modify: `pkg/dotnet/src/OpenFga.Language/PublicAPI.Unshipped.txt`
 - Test: `pkg/dotnet/test/OpenFga.Language.Tests/ModFileTests.cs`
 
 **Interfaces:**
 - Consumes: `LanguageErrors.ModFile`, `ModFileValidationException`, `SourceRange` (Task 2); fixture helpers (Task 3).
-- Produces: `public sealed class ModFile { static ModFile Parse(string text); string Schema; IReadOnlyList<string> Contents; }` (namespace `OpenFga.Language`). `Contents` holds the decoded relative file names in file order. `internal static class ModFileReader { static ModFile Read(string text) }` (namespace `OpenFga.Language.Transformer`).
+- Produces: `public sealed class ModFile { static ModFile Parse(string text); string Schema; IReadOnlyList<string> Contents; }` (namespace `OpenFga.Language`). `Contents` holds the decoded relative file names in file order. `internal static class ModFileReader { static ModFile Read(string text) }` (namespace `OpenFga.Language.Transformation`).
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -4898,11 +4898,11 @@ Expected: build FAILS with CS0103 (`ModFile` does not exist).
 
 - [ ] **Step 3: Implement `ModFile` and `ModFileReader`**
 
-`src/OpenFga.Language/Transformer/ModFile.cs`:
+`src/OpenFga.Language/Transformation/ModFile.cs`:
 ```csharp
 using System;
 using System.Collections.Generic;
-using OpenFga.Language.Transformer;
+using OpenFga.Language.Transformation;
 
 namespace OpenFga.Language;
 
@@ -4938,7 +4938,7 @@ public sealed class ModFile
 }
 ```
 
-`src/OpenFga.Language/Transformer/ModFileReader.cs`:
+`src/OpenFga.Language/Transformation/ModFileReader.cs`:
 ```csharp
 using System;
 using System.Collections.Generic;
@@ -4949,7 +4949,7 @@ using System.Text.RegularExpressions;
 using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
-namespace OpenFga.Language.Transformer;
+namespace OpenFga.Language.Transformation;
 
 /// <summary>Reads fga.mod YAML (JS mod-to-json.ts). Messages match JS; YAML syntax errors carry YamlDotNet's text.</summary>
 internal static class ModFileReader
@@ -5176,8 +5176,8 @@ Claude-Session: https://claude.ai/code/session_01U8M7PfSCNGaz27dr4xJPEu"
 Port of `pkg/js/transformer/modules/modules-to-model.ts`.
 
 **Files:**
-- Create: `pkg/dotnet/src/OpenFga.Language/Transformer/ModuleFile.cs`, `ModuleCombiner.cs`
-- Modify: `pkg/dotnet/src/OpenFga.Language/Transformer/ModelTransformer.cs`, `PublicAPI.Unshipped.txt`
+- Create: `pkg/dotnet/src/OpenFga.Language/Transformation/ModuleFile.cs`, `ModuleCombiner.cs`
+- Modify: `pkg/dotnet/src/OpenFga.Language/Transformation/ModelTransformer.cs`, `PublicAPI.Unshipped.txt`
 - Test: `pkg/dotnet/test/OpenFga.Language.Tests/ModuleTransformerTests.cs`
 
 **Interfaces:**
@@ -5285,7 +5285,7 @@ Expected: build FAILS with CS0117 (`ModelTransformer` has no `TransformModulesTo
 
 - [ ] **Step 3: Implement `ModuleFile` and `ModuleCombiner`**
 
-`src/OpenFga.Language/Transformer/ModuleFile.cs`:
+`src/OpenFga.Language/Transformation/ModuleFile.cs`:
 ```csharp
 using System;
 
@@ -5312,7 +5312,7 @@ public sealed class ModuleFile
 }
 ```
 
-`src/OpenFga.Language/Transformer/ModuleCombiner.cs`:
+`src/OpenFga.Language/Transformation/ModuleCombiner.cs`:
 ```csharp
 using System;
 using System.Collections.Generic;
@@ -5322,7 +5322,7 @@ using OpenFga.Language.Parsing;
 using OpenFga.Language.Validation;
 using OpenFga.Sdk.Model;
 
-namespace OpenFga.Language.Transformer;
+namespace OpenFga.Language.Transformation;
 
 /// <summary>Combines module files into one model and validates it (JS transformModuleFilesToModel).</summary>
 internal static class ModuleCombiner
@@ -5553,7 +5553,7 @@ internal static class ModuleCombiner
 
 - [ ] **Step 4: Add the public entry point**
 
-Add `using System.Collections.Generic;` and `using System.Linq;` to `Transformer/ModelTransformer.cs`, then append to the class:
+Add `using System.Collections.Generic;` and `using System.Linq;` to `Transformation/ModelTransformer.cs`, then append to the class:
 ```csharp
     /// <summary>Combines the files of a modular model into one validated model.</summary>
     /// <param name="files">The module files, typically those listed by <see cref="ModFile.Contents"/>.</param>

@@ -1,16 +1,16 @@
 using System.Text.RegularExpressions;
 using OpenFga.Language.Errors;
 using OpenFga.Language.Tests.Fixtures;
-using OpenFga.Language.Transformer;
+using OpenFga.Language.Transformation;
 
 namespace OpenFga.Language.Tests;
 
 public class ModuleTransformerTests
 {
-    private static readonly IReadOnlyList<ModuleCase> Modules = TestData.ModuleCases().Where(c => c.Modules.Count > 0).ToList();
+    private static readonly List<ModuleCase> Modules = TestData.ModuleCases().Where(c => c.Modules.Count > 0).ToList();
 
     // Mirrors the JS test: semantic cases rewritten from `model` to `module test`, only for schema 1.1 models.
-    private static readonly IReadOnlyList<DslCase> Semantic = TestData.DslSemanticCases()
+    private static readonly List<DslCase> Semantic = TestData.DslSemanticCases()
         .Where(c => !c.Dsl.TrimStart().StartsWith("module", StringComparison.Ordinal) && c.Dsl.Contains("schema 1.1", StringComparison.Ordinal))
         .ToList();
 

@@ -247,7 +247,7 @@ pkg/dotnet/
 ├── src/OpenFga.Language/
 │   ├── OpenFga.Language.csproj  # netstandard2.0; OpenFga.Sdk 0.10.4, Antlr4.Runtime.Standard 4.13.1, YamlDotNet (fga.mod parsing)
 │   ├── Gen/                     # ANTLR output (committed, like Go & Java), namespace OpenFga.Language.Antlr
-│   ├── Transformer/             # ModelTransformer, ModFile, ModuleFile, TransformOptions
+│   ├── Transformation/            # ModelTransformer, ModFile, ModuleFile, TransformOptions
 │   │                            # + internal DSL listener, error listener, model→DSL writer, module combiner
 │   ├── Utilities/               # ModelUtilities
 │   ├── Validation/              # ModelValidator, ModelValidationOptions, TupleSyntax + internal rules

@@ -1,7 +1,7 @@
 using System.Text.Json;
 using OpenFga.Language.Errors;
 using OpenFga.Language.Tests.Fixtures;
-using OpenFga.Language.Transformer;
+using OpenFga.Language.Transformation;
 using OpenFga.Language.Validation;
 using OpenFga.Sdk.Model;
 

@@ -7,7 +7,7 @@ using OpenFga.Language.Parsing;
 using OpenFga.Language.Utilities;
 using OpenFga.Sdk.Model;
 
-namespace OpenFga.Language.Transformer;
+namespace OpenFga.Language.Transformation;
 
 /// <summary>
 /// Writes an AuthorizationModel as DSL (JS jsontodsl.ts). Like JS, it reorders union/intersection children in place

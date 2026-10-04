@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using OpenFga.Sdk.Model;
 
-namespace OpenFga.Language.Transformer;
+namespace OpenFga.Language.Transformation;
 
 /// <summary>
 /// JSON uses the SDK's own System.Text.Json contract (attributes on the model types), so output is what OpenFgaClient

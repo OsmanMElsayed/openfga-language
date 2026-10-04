@@ -8,7 +8,7 @@ using OpenFga.Language.Errors;
 using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
-namespace OpenFga.Language.Transformer;
+namespace OpenFga.Language.Transformation;
 
 /// <summary>Reads fga.mod YAML (JS mod-to-json.ts). Messages match JS; YAML syntax errors carry YamlDotNet's text.</summary>
 internal static class ModFileReader

@@ -7,7 +7,7 @@ using OpenFga.Language.Utilities;
 using OpenFga.Language.Validation;
 using OpenFga.Sdk.Model;
 
-namespace OpenFga.Language.Transformer;
+namespace OpenFga.Language.Transformation;
 
 /// <summary>Combines module files into one model and validates it (JS transformModuleFilesToModel).</summary>
 internal static class ModuleCombiner

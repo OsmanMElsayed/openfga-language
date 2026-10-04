@@ -1,6 +1,6 @@
 using System;
 
-namespace OpenFga.Language.Transformer;
+namespace OpenFga.Language.Transformation;
 
 /// <summary>One file of a modular model.</summary>
 public sealed class ModuleFile

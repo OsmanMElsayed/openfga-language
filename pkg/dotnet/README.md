@@ -18,7 +18,7 @@ dotnet add package OpenFga.Language
 ### DSL to model and JSON
 
 ```csharp
-using OpenFga.Language.Transformer;
+using OpenFga.Language.Transformation;
 
 var model = ModelTransformer.TransformDslToModel(dsl);   // OpenFga.Sdk.Model.AuthorizationModel
 var json = ModelTransformer.TransformDslToJson(dsl);

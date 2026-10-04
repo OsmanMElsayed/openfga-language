@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using OpenFga.Language.Transformer;
+using OpenFga.Language.Errors;
 
-namespace OpenFga.Language.Transformer;
+namespace OpenFga.Language.Transformation;
 
 /// <summary>The contents of an <c>fga.mod</c> file, which lists the module files of a modular model.</summary>
 public sealed class ModFile

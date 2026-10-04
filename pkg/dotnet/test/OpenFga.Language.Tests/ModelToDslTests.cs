@@ -1,6 +1,6 @@
 using OpenFga.Language.Errors;
 using OpenFga.Language.Tests.Fixtures;
-using OpenFga.Language.Transformer;
+using OpenFga.Language.Transformation;
 using OpenFga.Sdk.Model;
 
 namespace OpenFga.Language.Tests;
@@ -9,7 +9,7 @@ public class ModelToDslTests
 {
     private static readonly IReadOnlyList<TransformerCase> Transformer = TestData.TransformerCases();
     private static readonly IReadOnlyList<JsonCase> Invalid = TestData.JsonSyntaxTransformerCases();
-    private static readonly IReadOnlyList<ModuleCase> Modules = TestData.ModuleCases().Where(c => c.Dsl is not null && c.Json is not null).ToList();
+    private static readonly List<ModuleCase> Modules = TestData.ModuleCases().Where(c => c.Dsl is not null && c.Json is not null).ToList();
 
     public static TheoryData<int, string> TransformerData => TestData.Indexes(Transformer, c => c.Name);
 

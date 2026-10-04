@@ -5,7 +5,7 @@ using OpenFga.Language.Errors;
 using OpenFga.Language.Parsing;
 using OpenFga.Sdk.Model;
 
-namespace OpenFga.Language.Transformer;
+namespace OpenFga.Language.Transformation;
 
 /// <summary>Converts OpenFGA models between the DSL, JSON and <see cref="AuthorizationModel"/>.</summary>
 public static class ModelTransformer
