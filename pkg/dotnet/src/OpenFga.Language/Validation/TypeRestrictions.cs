@@ -6,38 +6,6 @@ using OpenFga.Sdk.Model;
 
 namespace OpenFga.Language.Validation;
 
-internal readonly struct Origin
-{
-    public Origin(string? file, string? module)
-    {
-        File = file;
-        Module = module;
-    }
-
-    public string? File { get; }
-
-    public string? Module { get; }
-}
-
-internal readonly struct DecodedRestriction
-{
-    public DecodedRestriction(string type, string? relation, bool isWildcard, string? condition)
-    {
-        Type = type;
-        Relation = relation;
-        IsWildcard = isWildcard;
-        Condition = condition;
-    }
-
-    public string Type { get; }
-
-    public string? Relation { get; }
-
-    public bool IsWildcard { get; }
-
-    public string? Condition { get; }
-}
-
 /// <summary>String form of type restrictions used by validation (JS getTypeRestrictionString / destructTupleToUserset).</summary>
 internal static class TypeRestrictions
 {

@@ -31,9 +31,3 @@ public class LanguageError
             ? string.Format(CultureInfo.InvariantCulture, "{0} error at line={1}, column={2}: {3}", Kind, range.StartLine, range.StartColumn, Message)
             : string.Format(CultureInfo.InvariantCulture, "{0} error: {1}", Kind, Message);
 }
-
-internal static class LanguageErrors
-{
-    /// <summary>An <c>fga.mod</c> problem; JS reports these with kind <c>validation</c>.</summary>
-    public static LanguageError ModFile(string message, SourceRange range) => new("validation", message, null, range);
-}

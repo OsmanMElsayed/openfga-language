@@ -1,38 +1,19 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using OpenFga.Language.Antlr;
-using OpenFga.Language.Errors;
-using OpenFga.Sdk.Model;
 
 namespace OpenFga.Language.Parsing;
-
-internal sealed class DslParseResult
-{
-    public DslParseResult(AuthorizationModel model, IReadOnlyDictionary<string, TypeDefinition> typeDefExtensions, IReadOnlyList<SyntaxError> errors)
-    {
-        Model = model;
-        TypeDefExtensions = typeDefExtensions;
-        Errors = errors;
-    }
-
-    public AuthorizationModel Model { get; }
-
-    public IReadOnlyDictionary<string, TypeDefinition> TypeDefExtensions { get; }
-
-    public IReadOnlyList<SyntaxError> Errors { get; }
-}
 
 internal static class DslParser
 {
     public static DslParseResult Parse(string dsl)
     {
-        var cleaned = string.Join("\n", dsl.Split('\n').Select(CleanLine));
+        var dslWithCommentsStrippedOut = string.Join("\n", dsl.Split('\n').Select(StripCommentsOut));
 
         var errorListener = new DslErrorListener();
-        var lexer = new OpenFGALexer(new AntlrInputStream(cleaned));
+        var lexer = new OpenFGALexer(new AntlrInputStream(dslWithCommentsStrippedOut));
         lexer.RemoveErrorListeners();
         lexer.AddErrorListener(errorListener);
 
@@ -47,7 +28,7 @@ internal static class DslParser
     }
 
     // Whole-line comments become empty lines (keeping line numbers); trailing " #" comments and whitespace are removed.
-    private static string CleanLine(string line)
+    private static string StripCommentsOut(string line)
     {
         if (line.TrimStart().StartsWith("#", StringComparison.Ordinal))
         {
