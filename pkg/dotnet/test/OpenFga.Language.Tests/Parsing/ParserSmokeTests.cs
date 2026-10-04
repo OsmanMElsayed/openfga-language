@@ -2,7 +2,7 @@ using System.IO;
 using Antlr4.Runtime;
 using OpenFga.Language.Antlr;
 
-namespace OpenFga.Language.Tests;
+namespace OpenFga.Language.Tests.Parsing;
 
 public class ParserSmokeTests
 {

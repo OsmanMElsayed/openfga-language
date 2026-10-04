@@ -3,7 +3,7 @@ using OpenFga.Language.Errors;
 using OpenFga.Language.Tests.Fixtures;
 using OpenFga.Language.Transformation;
 
-namespace OpenFga.Language.Tests;
+namespace OpenFga.Language.Tests.Transformation;
 
 public class ModFileTests
 {

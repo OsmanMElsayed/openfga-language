@@ -1,7 +1,7 @@
 using OpenFga.Language.Parsing;
 using OpenFga.Sdk.Model;
 
-namespace OpenFga.Language.Tests;
+namespace OpenFga.Language.Tests.Parsing;
 
 public class ConditionTypeNamesTests
 {

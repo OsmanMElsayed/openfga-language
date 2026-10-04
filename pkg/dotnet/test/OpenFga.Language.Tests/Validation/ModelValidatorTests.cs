@@ -5,7 +5,7 @@ using OpenFga.Language.Transformation;
 using OpenFga.Language.Validation;
 using OpenFga.Sdk.Model;
 
-namespace OpenFga.Language.Tests;
+namespace OpenFga.Language.Tests.Validation;
 
 public class ModelValidatorTests
 {

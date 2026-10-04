@@ -1,7 +1,7 @@
 using OpenFga.Language.Utilities;
 using OpenFga.Sdk.Model;
 
-namespace OpenFga.Language.Tests;
+namespace OpenFga.Language.Tests.Utilities;
 
 public class ModelUtilitiesTests
 {

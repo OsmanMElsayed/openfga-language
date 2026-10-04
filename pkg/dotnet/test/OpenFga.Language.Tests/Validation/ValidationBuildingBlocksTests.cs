@@ -3,7 +3,7 @@ using OpenFga.Language.Utilities;
 using OpenFga.Language.Validation;
 using OpenFga.Sdk.Model;
 
-namespace OpenFga.Language.Tests;
+namespace OpenFga.Language.Tests.Validation;
 
 public class ValidationBuildingBlocksTests
 {

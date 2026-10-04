@@ -3,7 +3,7 @@ using OpenFga.Language.Tests.Fixtures;
 using OpenFga.Language.Transformation;
 using OpenFga.Sdk.Model;
 
-namespace OpenFga.Language.Tests;
+namespace OpenFga.Language.Tests.Transformation;
 
 public class ModelToDslTests
 {

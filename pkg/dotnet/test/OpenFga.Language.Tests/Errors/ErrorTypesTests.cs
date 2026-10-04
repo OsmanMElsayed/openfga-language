@@ -1,6 +1,6 @@
 using OpenFga.Language.Errors;
 
-namespace OpenFga.Language.Tests;
+namespace OpenFga.Language.Tests.Errors;
 
 public class ErrorTypesTests
 {

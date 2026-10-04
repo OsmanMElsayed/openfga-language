@@ -1,7 +1,7 @@
 using OpenFga.Language.Tests.Fixtures;
 using OpenFga.Language.Validation;
 
-namespace OpenFga.Language.Tests;
+namespace OpenFga.Language.Tests.Validation;
 
 public class TupleSyntaxTests
 {
