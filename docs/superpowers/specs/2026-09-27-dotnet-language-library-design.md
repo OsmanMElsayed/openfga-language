@@ -16,7 +16,7 @@ The library follows the [.NET Framework Design Guidelines](https://learn.microso
 ### Success criteria
 
 - All in-scope fixtures in `tests/data/` pass (same fixtures used by Go/JS/Java).
-- Public API is exactly the surface in §4, enforced by `PublicApiAnalyzers`.
+- Public API is exactly the surface in §4.
 - `make build-dotnet`, `test-dotnet`, `lint-dotnet`, `audit-dotnet` work from the repo root, like the other packages.
 
 ## 2. Scope
@@ -66,11 +66,11 @@ Mirrors JS and Java. Every operation either succeeds or throws an aggregate exce
 
 ### 3.4 Minimal public surface
 
-Anything not listed in §4 is `internal`. Generated ANTLR code is made `internal`. `Microsoft.CodeAnalysis.PublicApiAnalyzers` records the surface in `PublicAPI.Shipped.txt` / `PublicAPI.Unshipped.txt`; any unintended public symbol fails the build.
+Anything not listed in §4 is `internal`. Generated ANTLR code is made `internal`.
 
 ## 4. Public API
 
-Stateless operations are static classes (cf. `System.Text.Json.JsonSerializer`). Options are passed through explicit overloads rather than optional parameters (Framework Design Guidelines member overloading; also required by `PublicApiAnalyzers` rule RS0026, which rejects multiple overloads carrying optional parameters). All constructors of exception and error-item types are `internal` (consumers read them, never create them).
+Stateless operations are static classes (cf. `System.Text.Json.JsonSerializer`). Options are passed through explicit overloads rather than optional parameters (Framework Design Guidelines member overloading). All constructors of exception and error-item types are `internal` (consumers read them, never create them).
 
 ### 4.1 `OpenFga.Language`
 
@@ -237,7 +237,7 @@ public enum ValidationErrorType
 
 ```
 pkg/dotnet/
-├── OpenFga.Language.sln
+├── OpenFga.Language.slnx
 ├── Directory.Build.props        # LangVersion latest, Nullable enable, TreatWarningsAsErrors,
 │                                # AnalysisLevel latest-recommended, culture analyzers as errors,
 │                                # GenerateDocumentationFile, Deterministic, SourceLink
@@ -246,8 +246,6 @@ pkg/dotnet/
 ├── CHANGELOG.md
 ├── src/OpenFga.Language/
 │   ├── OpenFga.Language.csproj  # netstandard2.0; OpenFga.Sdk 0.10.4, Antlr4.Runtime.Standard 4.13.1, YamlDotNet (fga.mod parsing)
-│   ├── PublicAPI.Shipped.txt
-│   ├── PublicAPI.Unshipped.txt
 │   ├── Gen/                     # ANTLR output (committed, like Go & Java), namespace OpenFga.Language.Antlr
 │   ├── Transformer/             # ModelTransformer, ModFile, ModuleFile, TransformOptions
 │   │                            # + internal DSL listener, error listener, model→DSL writer, module combiner
@@ -258,7 +256,7 @@ pkg/dotnet/
     └── OpenFga.Language.Tests.csproj  # net10.0; xUnit, YamlDotNet; reads ../../../../tests/data
 ```
 
-- **ANTLR generation:** root `Makefile` target `antlr-gen-dotnet` runs the existing ANTLR container with `-Dlanguage=CSharp -package OpenFga.Language.Antlr -o pkg/dotnet/src/OpenFga.Language/Gen`, then post-processes generated files so `public` types become `internal` (the C# target always emits `public partial`). `PublicApiAnalyzers` catches anything missed.
+- **ANTLR generation:** root `Makefile` target `antlr-gen-dotnet` runs the existing ANTLR container with `-Dlanguage=CSharp -package OpenFga.Language.Antlr -o pkg/dotnet/src/OpenFga.Language/Gen`, then post-processes generated files so `public` types become `internal` (the C# target always emits `public partial`).
 - **Internals:** all non-API types are `internal sealed`. Tests get `InternalsVisibleTo` only where needed.
 - **Port source:** logic is ported primarily from the JS implementation (most complete: modules, validation), cross-checked against Java for statically-typed idioms.
 - **Strings:** all comparisons/case conversions ordinal or invariant (enforced by analyzers). Where JS uses `localeCompare` for sorting, .NET uses ordinal comparison (as Go and Java do; all share the same fixtures).
@@ -293,9 +291,9 @@ xUnit `[Theory]` tests driven by the shared fixtures; each case's `name` is the 
 - **Workflows** (mirroring Java/JS):
   - `pkg-dotnet-pr.yaml` — triggers on `pkg/dotnet/**`, `*.g4`, `tests/**`, its own workflow files; calls the build workflow.
   - `pkg-dotnet-build.yaml` — single `ubuntu-latest` job: `setup-dotnet` (10.0.x), ANTLR gen, lint, test, audit.
-  - `pkg-dotnet-release.yaml` — on `pkg/dotnet/v*` tag: pack and push `.nupkg` + `.snupkg` to NuGet.
+  - `pkg-dotnet-release.yaml` — on `pkg/dotnet/v*` tag: pack, verify tag/manifest/csproj versions, push `.nupkg` + `.snupkg` to NuGet (OIDC) and GitHub Packages — same pattern as `openfga/dotnet-sdk`.
 - **release-please:** add `pkg/dotnet` to `release-please-config.json` and `.release-please-manifest.json`, starting at `0.1.0`.
-- **Package metadata:** README, `Apache-2.0` license expression, SourceLink, deterministic build, symbols package.
+- **Package metadata:** mirrors `openfga/dotnet-sdk` (authors, company, copyright, icon, repository, release notes, tags), README, `Apache-2.0` license expression, SourceLink, deterministic build, symbols package.
 - **Docs:** add a .NET column to the feature-parity table in `AGENTS.md` and the root `README.md`; add .NET commands to `AGENTS.md`.
 
 ## 8. Out of scope (v1)
