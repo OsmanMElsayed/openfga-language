@@ -123,9 +123,10 @@ internal sealed class DslListener : OpenFGAParserBaseListener
 
     public override void ExitRelationDeclaration(OpenFGAParser.RelationDeclarationContext context)
     {
-        var relationNameContext = context.relationName();
         var relation = _currentRelation;
         _currentRelation = null;
+
+        var relationNameContext = context.relationName();
         if (relationNameContext == null || relation == null || _currentTypeDef?.Relations == null)
         {
             return;
@@ -375,9 +376,7 @@ internal sealed class DslListener : OpenFGAParserBaseListener
             case RelationOperator.And:
                 return new Userset { Intersection = new Usersets { Child = rewrites } };
             case RelationOperator.ButNot:
-                var difference = new Difference { Base = rewrites[0], Subtract = rewrites[1] };
-                rewrites.RemoveRange(0, 2);
-                return new Userset { Difference = difference };
+                return new Userset { Difference = new Difference { Base = rewrites[0], Subtract = rewrites[1] } };
             default:
                 return null;
         }
