@@ -15,51 +15,75 @@ namespace OpenFga.Language.Transformation;
 /// </summary>
 internal static class DslWriter
 {
+    private static readonly string Eol = Environment.NewLine;
+
     public static string Write(AuthorizationModel model, bool includeSourceInformation)
     {
+        // 1. Prepare the data.
         var schemaVersion = string.IsNullOrEmpty(model.SchemaVersion) ? "1.1" : model.SchemaVersion;
-        var typeDefinitions = model.TypeDefinitions?.Where(t => t != null).ToList();
-        var isModularModel = typeDefinitions?.Any(t => !string.IsNullOrEmpty(t.Metadata?.Module)) == true;
+        var typeDefinitions = model.TypeDefinitions?.Where(t => t != null).ToList() ?? [];
+        var isModularModel = typeDefinitions.Any(t => !string.IsNullOrEmpty(t.Metadata?.Module));
+        var orderedTypes = OrderTypes(typeDefinitions, isModularModel);
+        var orderedConditions = OrderConditions(model.Conditions, isModularModel);
 
-        var builder = new StringBuilder();
-        builder.Append("model\n  schema ").Append(schemaVersion).Append('\n');
+        // 2. Build the strings.
+        var formattedTypeDefinitions = FormatTypes(orderedTypes, isModularModel, includeSourceInformation);
+        var formattedConditions = FormatConditions(orderedConditions, includeSourceInformation);
 
-        if (typeDefinitions is { Count: > 0 })
-        {
-            IEnumerable<TypeDefinition> ordered = isModularModel
-                ? typeDefinitions.OrderBy(t => t, Comparer<TypeDefinition>.Create((a, b) =>
-                    SortByModule(a.Type, b.Type, a.Metadata?.Module, a.Metadata?.SourceInfo?.File, b.Metadata?.Module, b.Metadata?.SourceInfo?.File)))
-                : typeDefinitions;
-            builder.Append(string.Join("\n", ordered.Select(t => WriteType(t, isModularModel, includeSourceInformation)))).Append('\n');
-        }
-
-        builder.Append(WriteConditions(model.Conditions, isModularModel, includeSourceInformation));
-        return builder.ToString();
+        // 3. Return the result.
+        return $"model{Eol}  schema {schemaVersion}{Eol}{formattedTypeDefinitions}{formattedConditions}";
     }
 
-    private static string WriteType(TypeDefinition typeDef, bool isModularModel, bool includeSourceInformation)
+    private static List<TypeDefinition> OrderTypes(List<TypeDefinition> typeDefinitions, bool isModularModel)
+        => isModularModel
+            ? typeDefinitions.OrderBy(t => t, Comparer<TypeDefinition>.Create((a, b) =>
+                SortByModule(a.Type, b.Type, a.Metadata?.Module, a.Metadata?.SourceInfo?.File, b.Metadata?.Module, b.Metadata?.SourceInfo?.File))).ToList()
+            : typeDefinitions;
+
+    private static List<KeyValuePair<string, Userset>> OrderRelations(TypeDefinition typeDef, bool isModularModel)
+    {
+        var relations = typeDef.Relations;
+        if (relations is not { Count: > 0 })
+        {
+            return [];
+        }
+
+        if (!isModularModel)
+        {
+            return relations.ToList();
+        }
+
+        var relationsMetadata = typeDef.Metadata?.Relations;
+        return relations.OrderBy(r => r, Comparer<KeyValuePair<string, Userset>>.Create((a, b) =>
+        {
+            var aMeta = relationsMetadata.GetOrNull(a.Key);
+            var bMeta = relationsMetadata.GetOrNull(b.Key);
+            return SortByModule(a.Key, b.Key, aMeta?.Module, aMeta?.SourceInfo?.File, bMeta?.Module, bMeta?.SourceInfo?.File);
+        })).ToList();
+    }
+
+    private static List<KeyValuePair<string, Condition>> OrderConditions(Dictionary<string, Condition>? conditions, bool isModularModel)
+        => (conditions ?? []).Where(c => c.Value != null).OrderBy(c => c, Comparer<KeyValuePair<string, Condition>>.Create((a, b) =>
+            isModularModel
+                ? SortByModule(a.Key, b.Key, a.Value.Metadata?.Module, a.Value.Metadata?.SourceInfo?.File, b.Value.Metadata?.Module, b.Value.Metadata?.SourceInfo?.File)
+                : string.CompareOrdinal(a.Key, b.Key))).ToList();
+
+    private static string FormatTypes(List<TypeDefinition> orderedTypes, bool isModularModel, bool includeSourceInformation)
+        => string.Concat(orderedTypes.Select(t => $"{Eol}{FormatType(t, OrderRelations(t, isModularModel), includeSourceInformation)}{Eol}"));
+
+    private static string FormatType(TypeDefinition typeDef, List<KeyValuePair<string, Userset>> orderedRelations, bool includeSourceInformation)
     {
         var builder = new StringBuilder();
-        builder.Append("\ntype ").Append(typeDef.Type)
+        builder.Append("type ").Append(typeDef.Type)
             .Append(SourceComment(typeDef.Metadata?.Module, typeDef.Metadata?.SourceInfo?.File, string.Empty, includeSourceInformation));
 
-        var relations = typeDef.Relations;
-        if (relations is { Count: > 0 })
+        if (orderedRelations.Count > 0)
         {
-            builder.Append("\n  relations");
+            builder.Append(Eol).Append("  relations");
             var relationsMetadata = typeDef.Metadata?.Relations;
-            IEnumerable<KeyValuePair<string, Userset>> ordered = isModularModel
-                ? relations.OrderBy(r => r, Comparer<KeyValuePair<string, Userset>>.Create((a, b) =>
-                {
-                    var aMeta = relationsMetadata.GetOrNull(a.Key);
-                    var bMeta = relationsMetadata.GetOrNull(b.Key);
-                    return SortByModule(a.Key, b.Key, aMeta?.Module, aMeta?.SourceInfo?.File, bMeta?.Module, bMeta?.SourceInfo?.File);
-                }))
-                : relations;
-
-            foreach (var relation in ordered)
+            foreach (var relation in orderedRelations)
             {
-                builder.Append('\n').Append(WriteRelation(typeDef.Type, relation.Key, relation.Value, relationsMetadata.GetOrNull(relation.Key), includeSourceInformation));
+                builder.Append(Eol).Append(WriteRelation(typeDef.Type, relation.Key, relation.Value, relationsMetadata.GetOrNull(relation.Key), includeSourceInformation));
             }
         }
 
@@ -186,11 +210,11 @@ internal static class DslWriter
             return [];
         }
 
-        var thisPosition = usersets.FindIndex(u => u.This != null);
-        if (thisPosition > 0)
+        var directAssignmentIndex = usersets.FindIndex(u => u.This != null);
+        if (directAssignmentIndex > 0)
         {
-            var direct = usersets[thisPosition];
-            usersets.RemoveAt(thisPosition);
+            var direct = usersets[directAssignmentIndex];
+            usersets.RemoveAt(directAssignmentIndex);
             usersets.Insert(0, direct);
         }
 
@@ -222,26 +246,8 @@ internal static class DslWriter
         return false;
     }
 
-    private static string WriteConditions(Dictionary<string, Condition>? conditions, bool isModularModel, bool includeSourceInformation)
-    {
-        if (conditions is not { Count: > 0 })
-        {
-            return string.Empty;
-        }
-
-        IEnumerable<KeyValuePair<string, Condition>> ordered = conditions.Where(c => c.Value != null).OrderBy(c => c, Comparer<KeyValuePair<string, Condition>>.Create((a, b) =>
-            isModularModel
-                ? SortByModule(a.Key, b.Key, a.Value.Metadata?.Module, a.Value.Metadata?.SourceInfo?.File, b.Value.Metadata?.Module, b.Value.Metadata?.SourceInfo?.File)
-                : string.CompareOrdinal(a.Key, b.Key)));
-
-        var builder = new StringBuilder();
-        foreach (var condition in ordered)
-        {
-            builder.Append('\n').Append(WriteCondition(condition.Key, condition.Value, includeSourceInformation));
-        }
-
-        return builder.ToString();
-    }
+    private static string FormatConditions(List<KeyValuePair<string, Condition>> orderedConditions, bool includeSourceInformation)
+        => string.Concat(orderedConditions.Select(c => $"{Eol}{WriteCondition(c.Key, c.Value, includeSourceInformation)}{Eol}"));
 
     private static string WriteCondition(string conditionName, Condition condition, bool includeSourceInformation)
     {
@@ -255,7 +261,7 @@ internal static class DslWriter
             .Select(p => $"{p.Key}: {WriteParameterType(p.Value)}");
         var source = SourceComment(condition.Metadata?.Module, condition.Metadata?.SourceInfo?.File, string.Empty, includeSourceInformation);
 
-        return $"condition {conditionName}({string.Join(", ", parameters)}) {{\n  {condition.Expression}\n}}{source}\n";
+        return $"condition {conditionName}({string.Join(", ", parameters)}) {{{Eol}  {condition.Expression}{Eol}}}{source}";
     }
 
     private static string WriteParameterType(ConditionParamTypeRef parameterType)

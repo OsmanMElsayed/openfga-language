@@ -24,7 +24,7 @@ public class ModelToDslTests
         _ = name;
         var testCase = Transformer[index];
 
-        Assert.Equal(testCase.Dsl, ModelTransformer.TransformJsonToDsl(testCase.Json));
+        Assert.Equal(testCase.Dsl.ReplaceLineEndings(), ModelTransformer.TransformJsonToDsl(testCase.Json));
     }
 
     [Theory]
@@ -34,7 +34,7 @@ public class ModelToDslTests
         _ = name;
         var testCase = Transformer[index];
 
-        Assert.Equal(testCase.Dsl, ModelTransformer.TransformModelToDsl(AuthorizationModel.FromJson(testCase.Json)));
+        Assert.Equal(testCase.Dsl.ReplaceLineEndings(), ModelTransformer.TransformModelToDsl(AuthorizationModel.FromJson(testCase.Json)));
     }
 
     [Theory]
@@ -61,7 +61,7 @@ public class ModelToDslTests
         _ = name;
         var testCase = Modules[index];
 
-        Assert.Equal(testCase.Dsl, ModelTransformer.TransformJsonToDsl(testCase.Json!));
+        Assert.Equal(testCase.Dsl!.ReplaceLineEndings(), ModelTransformer.TransformJsonToDsl(testCase.Json!));
     }
 
     [Theory]
@@ -72,7 +72,7 @@ public class ModelToDslTests
         var testCase = Modules[index];
 
         Assert.Equal(
-            testCase.DslWithSourceInfo,
+            testCase.DslWithSourceInfo!.ReplaceLineEndings(),
             ModelTransformer.TransformJsonToDsl(testCase.Json!, new TransformOptions { IncludeSourceInformation = true }));
     }
 
@@ -152,7 +152,7 @@ public class ModelToDslTests
     {
         foreach (var testCase in Transformer)
         {
-            Assert.Equal(testCase.Dsl, ModelTransformer.TransformModelToDsl(ModelTransformer.TransformDslToModel(testCase.Dsl)));
+            Assert.Equal(testCase.Dsl.ReplaceLineEndings(), ModelTransformer.TransformModelToDsl(ModelTransformer.TransformDslToModel(testCase.Dsl)));
         }
     }
 }
