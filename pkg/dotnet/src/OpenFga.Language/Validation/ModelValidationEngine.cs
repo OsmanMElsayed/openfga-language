@@ -259,7 +259,7 @@ internal static class ModelValidationEngine
         {
             case RewriteType.Direct:
                 {
-                    var fromPossibleTypes = TypeRestrictions.ToTexts(relationMetadata?.DirectlyRelatedUserTypes);
+                    var fromPossibleTypes = (relationMetadata?.DirectlyRelatedUserTypes).OrEmpty().Where(r => r != null).ToList();
                     if (fromPossibleTypes.Count == 0)
                     {
                         collector.RaiseAssignableRelationMustHaveTypes(lineIndex);
@@ -267,26 +267,28 @@ internal static class ModelValidationEngine
 
                     foreach (var item in fromPossibleTypes)
                     {
-                        var decoded = TypeRestrictions.Decode(item);
-                        if (!typeMap.ContainsKey(decoded.Type))
+                        var itemType = item.Type ?? string.Empty;
+                        var itemRelation = item.Relation is { Length: > 0 } ? item.Relation : null;
+                        var itemCondition = item.Condition is { Length: > 0 } ? item.Condition : null;
+                        if (!typeMap.ContainsKey(itemType))
                         {
-                            collector.RaiseInvalidType(decoded.Type, type, relation, origin, lineIndex);
+                            collector.RaiseInvalidType(itemType, type, relation, origin, lineIndex);
                         }
 
-                        if (decoded.Condition != null
-                            && decoded.Condition != TypeRestrictions.InlineExpressionCondition
-                            && (conditions == null || !conditions.ContainsKey(decoded.Condition)))
+                        if (itemCondition != null
+                            && itemCondition != TypeRestrictions.InlineExpressionCondition
+                            && (conditions == null || !conditions.ContainsKey(itemCondition)))
                         {
-                            collector.RaiseInvalidConditionNameInParameter(decoded.Condition, type, relation, decoded.Condition, origin, lineIndex);
+                            collector.RaiseInvalidConditionNameInParameter(itemCondition, type, relation, itemCondition, origin, lineIndex);
                         }
 
-                        if (decoded.IsWildcard && decoded.Relation != null)
+                        if (item.Wildcard != null && itemRelation != null)
                         {
-                            collector.RaiseAssignableTypeWildcardRelation(item, type, relation, origin, lineIndex);
+                            collector.RaiseAssignableTypeWildcardRelation(TypeRestrictions.ToText(item), type, relation, origin, lineIndex);
                         }
-                        else if (decoded.Relation != null && typeMap.GetOrNull(decoded.Type)?.Relations.GetOrNull(decoded.Relation) == null)
+                        else if (itemRelation != null && typeMap.GetOrNull(itemType)?.Relations.GetOrNull(itemRelation) == null)
                         {
-                            collector.RaiseInvalidTypeRelation($"{decoded.Type}#{decoded.Relation}", decoded.Type, relation, decoded.Relation, type, lineIndex, origin);
+                            collector.RaiseInvalidTypeRelation($"{itemType}#{itemRelation}", itemType, relation, itemRelation, type, lineIndex, origin);
                         }
                     }
 
@@ -328,14 +330,13 @@ internal static class ModelValidationEngine
                     var missingOn = new List<string>();
                     foreach (var item in fromTypes)
                     {
-                        var decoded = TypeRestrictions.Decode(item);
-                        if (decoded.IsWildcard || decoded.Relation != null)
+                        if (item.Wildcard != null || item.Relation is { Length: > 0 })
                         {
                             collector.RaiseTupleUsersetRequiresDirect(childDef.From, type, relation, origin, lineIndex);
                         }
-                        else if (typeMap.GetOrNull(decoded.Type)?.Relations.GetOrNull(childDef.Target) == null)
+                        else if (typeMap.GetOrNull(item.Type ?? string.Empty)?.Relations.GetOrNull(childDef.Target) == null)
                         {
-                            missingOn.Add(decoded.Type);
+                            missingOn.Add(item.Type ?? string.Empty);
                         }
                     }
 
@@ -353,13 +354,13 @@ internal static class ModelValidationEngine
     }
 
     /// <summary>The restrictions of a directly assignable, non-rewritten relation, and whether it is a single (non-operator) relation.</summary>
-    private static (List<string> Types, bool IsValid) AllowableTypes(Dictionary<string, TypeDefinition> typeMap, string type, string relation)
+    private static (List<RelationReference> Types, bool IsValid) AllowableTypes(Dictionary<string, TypeDefinition> typeMap, string type, string relation)
     {
         var typeDef = typeMap[type];
         var currentRelation = typeDef.Relations.GetOrNull(relation) ?? new Userset();
         var isValid = currentRelation.Union == null && currentRelation.Intersection == null && currentRelation.Difference == null;
         var allowed = isValid && RelationTarget.Of(currentRelation).Rewrite == RewriteType.Direct
-            ? TypeRestrictions.ToTexts(typeDef.Metadata?.Relations.GetOrNull(relation)?.DirectlyRelatedUserTypes)
+            ? (typeDef.Metadata?.Relations.GetOrNull(relation)?.DirectlyRelatedUserTypes).OrEmpty().Where(r => r != null).ToList()
             : [];
         return (allowed, isValid);
     }

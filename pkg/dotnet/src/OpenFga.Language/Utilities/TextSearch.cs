@@ -10,7 +10,7 @@ internal static class TextSearch
 
     /// <summary>
     /// Index of the first whole-word occurrence of <paramref name="symbol"/>, or -1. The symbol is deliberately not
-    /// escaped, as in JS; ECMAScript mode gives JS <c>\b</c> semantics. An invalid pattern counts as not found.
+    /// escaped, as in JS. An invalid pattern counts as not found.
     /// </summary>
     public static int FindWord(string? line, string symbol)
     {
@@ -21,7 +21,7 @@ internal static class TextSearch
 
         try
         {
-            var match = Regex.Match(line, @"\b" + symbol + @"\b", RegexOptions.ECMAScript, MatchTimeout);
+            var match = Regex.Match(line, @"\b" + symbol + @"\b", RegexOptions.None, MatchTimeout);
             return match.Success ? match.Index : -1;
         }
         catch (ArgumentException)
@@ -55,10 +55,17 @@ internal static class TextSearch
         return colon + FindWord(segment, symbol) + 1;
     }
 
-    /// <summary>Marks the symbol in the text after <c>from</c> (the tupleset of <c>a from b</c>).</summary>
+    /// <summary>Marks the symbol in the text after <c>from</c> (the tupleset of <c>a from b</c>), or 0 when <c>from</c> or the symbol is not found.</summary>
     public static int ResolveAfterFrom(string line, string symbol)
     {
-        var start = Math.Min(line.IndexOf("from", StringComparison.Ordinal) + "from".Length, line.Length);
-        return start + line.Substring(start).IndexOf(symbol, StringComparison.Ordinal);
+        var from = line.IndexOf("from", StringComparison.Ordinal);
+        if (from < 0)
+        {
+            return 0;
+        }
+
+        var start = from + "from".Length;
+        var index = FindWord(line.Substring(start), symbol);
+        return index < 0 ? 0 : start + index;
     }
 }

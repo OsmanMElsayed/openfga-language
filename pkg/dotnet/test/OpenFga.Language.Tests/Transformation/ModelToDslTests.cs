@@ -130,9 +130,10 @@ public class ModelToDslTests
     }
 
     [Fact]
-    public void DeeplyNestedUnionsDoNotExceedDefaultJsonMaxDepth()
+    public void NestedUnionsWithinSdkJsonMaxDepthRoundTrip()
     {
-        const int depth = 30;
+        // The SDK's ToJson/FromJson use System.Text.Json's default MaxDepth (64); each nesting level costs 3.
+        const int depth = 15;
         var nested = $"u{depth - 1}";
         for (var i = depth - 2; i >= 0; i--)
         {

@@ -189,12 +189,12 @@ internal static class ModuleCombiner
             case ValidationErrorType.ConditionNotUsed:
                 return LineNumbers.GetConditionLine(symbol, lines) ?? -1;
             case ValidationErrorType.ReservedTypeKeywords:
-                return LineNumbers.GetTypeLine(symbol, lines) ?? -1;
+                return TypeOrExtensionLine(symbol, lines);
             case ValidationErrorType.InvalidName:
                 // Only the message distinguishes a relation name from a type name.
-                return (error.Message.StartsWith("relation", StringComparison.Ordinal)
-                    ? LineNumbers.GetRelationLine(symbol, lines)
-                    : LineNumbers.GetTypeLine(symbol, lines)) ?? -1;
+                return error.Message.StartsWith("relation", StringComparison.Ordinal)
+                    ? LineNumbers.GetRelationLine(symbol, lines) ?? -1
+                    : TypeOrExtensionLine(symbol, lines);
             case ValidationErrorType.ReservedRelationKeywords:
                 return LineNumbers.GetRelationLine(symbol, lines) ?? -1;
             case ValidationErrorType.InvalidRelationType:

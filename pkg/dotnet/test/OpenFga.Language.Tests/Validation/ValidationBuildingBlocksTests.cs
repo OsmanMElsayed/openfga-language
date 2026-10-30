@@ -46,6 +46,15 @@ public class ValidationBuildingBlocksTests
     }
 
     [Fact]
+    public void ResolveAfterFromMatchesWholeWordsAndClampsMisses()
+    {
+        const string line = "    define can_view: viewer from parent_org or parent";
+        Assert.Equal(line.LastIndexOf("parent", StringComparison.Ordinal), TextSearch.ResolveAfterFrom(line, "parent"));
+        Assert.Equal(0, TextSearch.ResolveAfterFrom("    define can_view: viewer from parent", "missing"));
+        Assert.Equal(0, TextSearch.ResolveAfterFrom("    define can_view: viewer", "viewer"));
+    }
+
+    [Fact]
     public void LineNumbersFindDefinitions()
     {
         Assert.Equal(2, LineNumbers.GetTypeLine("user", Lines));
@@ -62,22 +71,12 @@ public class ValidationBuildingBlocksTests
     }
 
     [Fact]
-    public void TypeRestrictionsRoundTrip()
+    public void TypeRestrictionsToText()
     {
         Assert.Equal("user:* with c", TypeRestrictions.ToText(new RelationReference { Type = "user", Wildcard = new object(), Condition = "c" }));
         Assert.Equal("group#member", TypeRestrictions.ToText(new RelationReference { Type = "group", Relation = "member" }));
-
-        var decoded = TypeRestrictions.Decode("group#member with cond");
-        Assert.Equal("group", decoded.Type);
-        Assert.Equal("member", decoded.Relation);
-        Assert.False(decoded.IsWildcard);
-        Assert.Equal("cond", decoded.Condition);
-
-        var wildcard = TypeRestrictions.Decode("user:*");
-        Assert.Equal("user", wildcard.Type);
-        Assert.Null(wildcard.Relation);
-        Assert.True(wildcard.IsWildcard);
-        Assert.Null(wildcard.Condition);
+        Assert.Equal("group#member with cond", TypeRestrictions.ToText(new RelationReference { Type = "group", Relation = "member", Condition = "cond" }));
+        Assert.Equal("user", TypeRestrictions.ToText(new RelationReference { Type = "user", Relation = string.Empty }));
     }
 
     [Fact]

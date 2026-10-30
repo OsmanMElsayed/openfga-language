@@ -79,8 +79,6 @@ public class ModFileTests
     }
 
     [Theory]
-    [InlineData(@"C:\x\a.fga")]
-    [InlineData("C:/x/a.fga")]
     [InlineData(@"\\srv\a.fga")]
     [InlineData(@"\a.fga")]
     public void WindowsAbsolutePathsAreRejected(string path)

@@ -30,26 +30,31 @@ internal static class EntryPointAnalyzer
 
         if (rewrite.This != null)
         {
-            foreach (var restriction in TypeRestrictions.ToTexts(relationsMetadata.GetOrNull(relationName!)?.DirectlyRelatedUserTypes))
+            foreach (var restriction in (relationsMetadata.GetOrNull(relationName!)?.DirectlyRelatedUserTypes).OrEmpty())
             {
-                var decoded = TypeRestrictions.Decode(restriction);
-                if (decoded.Relation is null || decoded.IsWildcard)
+                if (restriction is null)
+                {
+                    continue;
+                }
+
+                var restrictionType = restriction.Type ?? string.Empty;
+                if (restriction.Relation is not { Length: > 0 } restrictionRelation || restriction.Wildcard != null)
                 {
                     return (true, false);
                 }
 
-                var assignableRelation = typeMap.GetOrNull(decoded.Type)?.Relations.GetOrNull(decoded.Relation);
+                var assignableRelation = typeMap.GetOrNull(restrictionType)?.Relations.GetOrNull(restrictionRelation);
                 if (assignableRelation == null)
                 {
                     return (false, false);
                 }
 
-                if (visited.Contains(decoded.Type, decoded.Relation))
+                if (visited.Contains(restrictionType, restrictionRelation))
                 {
                     continue;
                 }
 
-                if (Analyze(typeMap, decoded.Type, decoded.Relation, assignableRelation, visited).HasEntry)
+                if (Analyze(typeMap, restrictionType, restrictionRelation, assignableRelation, visited).HasEntry)
                 {
                     return (true, false);
                 }
@@ -89,10 +94,15 @@ internal static class EntryPointAnalyzer
                 return (false, false);
             }
 
-            foreach (var restriction in TypeRestrictions.ToTexts(relationsMetadata.GetOrNull(tuplesetRelationName)?.DirectlyRelatedUserTypes))
+            foreach (var restriction in (relationsMetadata.GetOrNull(tuplesetRelationName)?.DirectlyRelatedUserTypes).OrEmpty())
             {
+                if (restriction is null)
+                {
+                    continue;
+                }
+
                 // JS indexes types by the full restriction text, which throws for "folder with c"; use the type part.
-                var targetType = TypeRestrictions.Decode(restriction).Type;
+                var targetType = restriction.Type ?? string.Empty;
                 var assignableRelation = typeMap.GetOrNull(targetType)?.Relations.GetOrNull(computedRelationName);
                 if (assignableRelation == null)
                 {

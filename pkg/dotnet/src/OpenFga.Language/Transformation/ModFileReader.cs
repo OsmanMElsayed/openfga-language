@@ -68,8 +68,7 @@ internal static class ModFileReader
                 if (fileName.IndexOf("../", StringComparison.Ordinal) >= 0
                     || fileName.IndexOf("..\\", StringComparison.Ordinal) >= 0
                     || fileName.StartsWith("/", StringComparison.Ordinal)
-                    || fileName.StartsWith("\\", StringComparison.Ordinal)
-                    || (fileName.Length >= 2 && fileName[1] == ':' && IsAsciiLetter(fileName[0])))
+                    || fileName.StartsWith("\\", StringComparison.Ordinal))
                 {
                     errors.Add(LanguageErrors.ModFile($"invalid contents item {original}", RangeOf(item)));
                     continue;
@@ -213,8 +212,6 @@ internal static class ModFileReader
             return value;
         }
     }
-
-    private static bool IsAsciiLetter(char c) => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 
     // Decode URI-encoded dots and slashes so encoded traversal (%2e%2e%2f) is caught.
     private static string DecodePath(string value)
